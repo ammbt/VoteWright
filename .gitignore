@@ -33,3 +33,6 @@ $RECYCLE.BIN/
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
+
+# App Configuration -- keys and stuff that shouldn't be stored in github
+app-config.json
