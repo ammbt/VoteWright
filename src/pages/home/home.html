@@ -1,0 +1,31 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+    <ion-title>Home</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <h3>Vote Wright</h3>
+    <ion-list>
+        <ion-card ion-item *ngFor="let player of players">
+            <ion-card-content>
+                <span>{{player.name}}</span>
+                <ion-item>
+                    <ion-checkbox [(ngModel)]="player.IsPlaying">
+                    </ion-checkbox>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+    </ion-list>
+
+    <ion-input
+        [(ngModel)] = "playerName"
+        type="text"
+        placeholder="New player name">
+
+    </ion-input>
+    <button ion-button primary (tap)="addPlayer()">Add Player</button>
+</ion-content>
