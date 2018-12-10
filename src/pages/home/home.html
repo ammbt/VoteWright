@@ -3,16 +3,16 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-    <ion-title>Home</ion-title>
+    <ion-title>Vote Wright</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-    <h3>Vote Wright</h3>
+    <h3>Players</h3>
     <ion-list>
         <ion-card ion-item *ngFor="let player of players">
             <ion-card-content>
-                <span>{{player.name}}</span>
+                <div>{{player.name}}</div>
                 <ion-item>
                     <ion-checkbox [(ngModel)]="player.IsPlaying">
                     </ion-checkbox>
@@ -24,7 +24,7 @@
     <ion-input
         [(ngModel)] = "playerName"
         type="text"
-        placeholder="New player name">
+        placeholder="New Player Name">
 
     </ion-input>
     <button ion-button primary (tap)="addPlayer()">Add Player</button>
