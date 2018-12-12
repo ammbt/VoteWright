@@ -9,10 +9,20 @@
 
 <ion-content padding>
     <h3>Players</h3>
+    <ion-searchbar
+        class="filter"
+        [(ngModel)]="playerFilterInput"
+        (ionInput)="onInputFilterResults($event)"
+        (ionCancel)="onClearOrCancelFilter($event)"
+        (ionClear)="onClearOrCancelFilter($event)"
+        [showCancelButton]="true"
+        debounce=250
+        placeholder="Start typing to filter">
+    </ion-searchbar>
     <ion-list>
-        <ion-card ion-item *ngFor="let player of players">
+        <ion-card ion-item *ngFor="let player of filteredPlayers">
             <ion-card-content>
-                <div>{{player.name}}</div>
+                <div>{{player.firstName}} {{player.lastName}}</div>
                 <ion-item>
                     <ion-checkbox [(ngModel)]="player.IsPlaying">
                     </ion-checkbox>
@@ -21,11 +31,19 @@
         </ion-card>
     </ion-list>
 
-    <ion-input
-        [(ngModel)] = "playerName"
-        type="text"
-        placeholder="New Player Name">
+    <ion-item>
+        <ion-input item-start
+            [(ngModel)] = "playerFirstName"
+            type="text"
+            placeholder="First name">
+        </ion-input>
 
-    </ion-input>
-    <button ion-button primary (tap)="addPlayer()">Add Player</button>
+        <ion-input item-start
+            [(ngModel)] = "playerLastName"
+            type="text"
+            placeholder="Last name">
+        </ion-input>
+
+        <button ion-content ion-button primary (tap)="addPlayer()">Add Player</button>
+    </ion-item>
 </ion-content>
