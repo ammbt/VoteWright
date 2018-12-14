@@ -48,7 +48,7 @@ export class Storage {
         return this.getObjects<Player>(this.playersCollection, this.playerCache);
     }
 
-    public addPlayer(player: Player): Promise<boolean> {
+    public addPlayer(player: Player): Promise<Player> {
         let matchingPlayer: Player = this.playerCache.find((p: Player) => {
             return (p.storageId && p.storageId === player.storageId)
                 || (p.firstName === player.firstName && p.lastName === player.lastName);

@@ -1,8 +1,13 @@
 import { Player } from "./Player";
 
 export class Group {
-    storageId: string;
+    storageId?: string;
     description?: string;
     playerIds: string[];
-    loadedPlayers?: Player[];
+	loadedPlayers?: Player[];
+	playerPoints: PlayerToPoints[];
+}
+
+export interface PlayerToPoints {
+	[playerId: string]: number;
 }
