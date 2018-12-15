@@ -165,11 +165,8 @@ export class PlayersPage {
 
     private loadPlayers(refresh: boolean = false): void {
         this.appStorage.getPlayers(refresh).then((loadedPlayers: Player[]): void => {
-            if(this.filteredPlayers.length === 0) {
-                this.filteredPlayers = loadedPlayers;
-            }
-
-            this.players = loadedPlayers;
+			this.players = loadedPlayers;
+			this.onClearOrCancelFilter();
         } );
     }
 }
