@@ -7,21 +7,21 @@ import { MyApp } from './app.component';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 // Pages
-import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
+import { PlayersPage } from '../pages/players/players';
+import { GroupPage } from '../pages/group/group';
 
 // Ionic components
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 // Service Providers
-import { Storage } from './../services/Storage';
+import { AppStorage } from '../services/app-storage';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
-    ListPage
+    PlayersPage,
+    GroupPage
   ],
   imports: [
     BrowserModule,
@@ -30,13 +30,13 @@ import { Storage } from './../services/Storage';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
-    ListPage
+    PlayersPage,
+    GroupPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    Storage,
+    AppStorage,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

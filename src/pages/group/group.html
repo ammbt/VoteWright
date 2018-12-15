@@ -1,0 +1,17 @@
+<ion-header>
+	<ion-navbar>
+		<button ion-button menuToggle>
+			<ion-icon name="menu"></ion-icon>
+		</button>
+		<ion-title>Group</ion-title>
+	</ion-navbar>
+</ion-header>
+
+<ion-content>
+	<ion-list>
+		<ion-item *ngFor="let player of group.loadedPlayers">
+			<!-- <ion-icon person></ion-icon> -->
+			{{player.firstName}} {{player.lastName}} +{{group.playerPoints[player.storageId]}}
+		</ion-item>
+	</ion-list>
+</ion-content>

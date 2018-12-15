@@ -3,5 +3,6 @@ export class Player {
     firstName: string;
     lastName: string;
     lastPlayDate: string;
-    isPlaying?: boolean;
+	isPlaying?: boolean;
+	points?: number;
 }
