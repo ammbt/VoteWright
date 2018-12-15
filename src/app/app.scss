@@ -14,3 +14,33 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+ion-card-content div {
+	display: inline-block;
+	width: 20%;
+}
+
+.card-content-md {
+	padding: 3px 6px;
+}
+
+.item-checkbox {
+	display: inline;
+}
+
+.item-checkbox .item-inner {
+	display: none;
+}
+
+.item.item-md .checkbox-md {
+	display: inline-block;
+}
+
+.checkbox-md .checkbox-icon {
+	position: absolute;
+	top: 2px;
+}
+
+.label-md {
+	margin: 5px 0 5px 0;
+}

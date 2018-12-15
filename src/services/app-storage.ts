@@ -8,7 +8,6 @@ import { Group } from '../models/Group';
 
 @Injectable()
 export class AppStorage {
-
     private readonly playersCollection: string = "Players";
     private readonly groupsCollection: string = "Groups";
     private breakException: ExceptionInformation = {};
@@ -109,6 +108,18 @@ export class AppStorage {
         }
 
         return Promise.resolve(matchingGroup);
+	}
+
+	public updateGroup(group: Group): void {
+		// We only want to store the properties we need.
+		let storageGroup: Group = {
+			playerIds: group.playerIds,
+			playerPoints: group.playerPoints
+		}
+
+		this.database.collection(this.groupsCollection).doc(group.storageId).set(storageGroup).catch((reason: any) => {
+			console.error(`Unable to update the group with id ${group.storageId}. Error: ${reason}`);
+		}) ;
 	}
 
 	public getPlayersForGroup(group: Group): Promise<Player[]> {

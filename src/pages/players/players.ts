@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-
 import  moment  from 'moment';
-
 import { AppStorage } from '../../services/app-storage';
 import { Player } from '../../models/Player';
 import { GroupPage } from '../group/group';
@@ -153,7 +151,7 @@ export class PlayersPage {
         return this.appStorage.addGroup(group);
 	}
 
-	public updatePlayersSelected($event): void {
+	public updatePlayersSelected(): void {
 		let playersSelected: Player[] = this.players.filter((player: Player) => {
 			return player.isPlaying;
 		});

@@ -9,9 +9,23 @@
 
 <ion-content>
 	<ion-list>
-		<ion-item *ngFor="let player of group.loadedPlayers">
-			<!-- <ion-icon person></ion-icon> -->
-			{{player.firstName}} {{player.lastName}} +{{group.playerPoints[player.storageId]}}
-		</ion-item>
+		<ion-card ion-item *ngFor="let player of group.loadedPlayers">
+			<ion-card-content>
+				<div>{{player.firstName}} {{player.lastName}}</div>
+				<div>+{{group.playerPoints[player.storageId]}}</div>
+				<ion-item>
+					<ion-checkbox [(ngModel)]="player.isPlaying"
+						(ngModelChange)="updatePlayersSelected($event)">
+					</ion-checkbox>
+				</ion-item>
+			</ion-card-content>
+		</ion-card>
 	</ion-list>
+
+	<button ion-button
+			primary
+			[disabled]="!arePlayersSelected"
+			(tap)="updatePoints()">
+		Update points
+	</button>
 </ion-content>
