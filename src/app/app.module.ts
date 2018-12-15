@@ -15,7 +15,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 // Service Providers
-import { Storage } from './../services/Storage';
+import { AppStorage } from '../services/app-storage';
 
 @NgModule({
   declarations: [
@@ -36,7 +36,7 @@ import { Storage } from './../services/Storage';
   providers: [
     StatusBar,
     SplashScreen,
-    Storage,
+    AppStorage,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

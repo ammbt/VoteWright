@@ -7,7 +7,7 @@ import { Player } from '../models/Player';
 import { Group } from '../models/Group';
 
 @Injectable()
-export class Storage {
+export class AppStorage {
 
     private readonly playersCollection: string = "Players";
     private readonly groupsCollection: string = "Groups";
@@ -45,7 +45,7 @@ export class Storage {
             return Promise.resolve(this.playerCache);
         }
 
-        return this.getObjects<Player>(this.playersCollection, this.playerCache);
+        return this.getObjects<Player>(this.playersCollection, 'playerCache');
     }
 
     public addPlayer(player: Player): Promise<Player> {
@@ -64,7 +64,7 @@ export class Storage {
             return Promise.resolve(this.groupCache);
         }
 
-        return this.getObjects<Group>(this.groupsCollection, this.groupCache);
+        return this.getObjects<Group>(this.groupsCollection, 'groupCache');
     }
 
     public addGroup(group: Group): Promise<Group> {
@@ -109,7 +109,43 @@ export class Storage {
         }
 
         return Promise.resolve(matchingGroup);
-    }
+	}
+
+	public getPlayersForGroup(group: Group): Promise<Player[]> {
+		if(this.playerCache.length === 0) {
+			return this.getPlayers().then((players: Player[]) => {
+				return this.getPlayersForGroupViaCache(group);
+			});
+		}
+		else {
+			return this.getPlayersForGroupViaCache(group);
+		}
+	}
+
+	private getPlayersForGroupViaCache(group: Group): Promise<Player[]> {
+		let players: Player[] = [];
+		group.playerIds.forEach((id: string) => {
+			players.push(this.getPlayerFromCache(id));
+		});
+
+		return Promise.resolve(players);
+	}
+
+	private getPlayerFromCache(id: string): Player {
+		try{
+			this.playerCache.forEach((player: Player) => {
+				if(player.storageId === id) {
+					throw player;
+				}
+			});
+		}
+		catch(player) {
+			return player;
+		}
+
+		console.error(`Player with id ${id} could not be found.`);
+		return null;
+	}
 
     private addObject<T>(collection: string, objectToAdd: T): Promise<T> {
         let objectJson = JSON.parse(JSON.stringify(objectToAdd));
@@ -122,9 +158,9 @@ export class Storage {
         });
     }
 
-    private getObjects<T>(collection: string, cache: T[]): Promise<T[]> {
+    private getObjects<T>(collection: string, cachePropertyName: string): Promise<T[]> {
         return this.database.collection(collection).get().then((results: firebase.firestore.QuerySnapshot): T[] => {
-            cache = [];
+            this[cachePropertyName] = [];
             results.forEach((snapshot: firebase.firestore.QueryDocumentSnapshot) => {
                 let rawPlayerData: firebase.firestore.DocumentData = snapshot.data();
                 let object: any = {};
@@ -133,10 +169,10 @@ export class Storage {
                 }
 
                 object['storageId'] = snapshot.id;
-                cache.push(object);
+                this[cachePropertyName].push(object);
             });
 
-            return cache;
+            return this[cachePropertyName];
         }).catch((reason: any): T[]=> {
             console.error("Error querying the database for players. Error: ", reason);
             return [];

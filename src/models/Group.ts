@@ -5,7 +5,7 @@ export class Group {
     description?: string;
     playerIds: string[];
 	loadedPlayers?: Player[];
-	playerPoints: PlayerToPoints[];
+	playerPoints: PlayerToPoints;
 }
 
 export interface PlayerToPoints {

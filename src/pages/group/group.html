@@ -11,7 +11,7 @@
 	<ion-list>
 		<ion-item *ngFor="let player of group.loadedPlayers">
 			<!-- <ion-icon person></ion-icon> -->
-			<div>{{player.firstName}} {{player.lastName}} {{group.playerPoints[player.storageId]}}</div>
+			{{player.firstName}} {{player.lastName}} +{{group.playerPoints[player.storageId]}}
 		</ion-item>
 	</ion-list>
 </ion-content>

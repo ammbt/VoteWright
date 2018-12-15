@@ -3,7 +3,7 @@ import { NavController } from 'ionic-angular';
 
 import  moment  from 'moment';
 
-import { Storage } from '../../services/Storage';
+import { AppStorage } from '../../services/app-storage';
 import { Player } from '../../models/Player';
 import { GroupPage } from '../group/group';
 import { Group } from '../../models/Group';
@@ -16,14 +16,14 @@ export class PlayersPage {
 
     private players: Player[];
 	private filteredPlayers: Player[];
-	private arePlayersSelected: boolean;
+	public arePlayersSelected: boolean;
 
     // Input fields.
     private playerFilterInput: string;
     private playerFirstName: string;
     private playerLastName: string;
 
-    constructor(public navController: NavController, private storage: Storage) {
+    constructor(public navController: NavController, private appStorage: AppStorage) {
         this.players = [];
         this.filteredPlayers = [];
         this.loadPlayers();
@@ -57,7 +57,7 @@ export class PlayersPage {
             lastPlayDate: moment().format()
         };
 
-        this.storage.addPlayer(player).then((player: Player) => {
+        this.appStorage.addPlayer(player).then((player: Player) => {
             if(player) {
                 this.playerFirstName = "";
                 this.playerLastName = "";
@@ -85,18 +85,18 @@ export class PlayersPage {
                                             throw { playerFound: true };
                                         }
 
-                                        throw { playerFound: false };
                                     });
 
+									throw { playerFound: false };
                                 }
                                 catch(playerFoundBreakException) {
                                     if(!playerFoundBreakException.playerFound) {
+										// Player not found in this group.
                                         throw playerFoundBreakException;
                                     }
 
                                     // The player was found.
                                 }
-
                             });
 
                             // All players are in this group.
@@ -120,26 +120,37 @@ export class PlayersPage {
             catch(groupMatchBreakException) {}
 
             if(!groupMatch) {
-                // We didn't find a matching group of players. Create a new one instead.
+				// We didn't find a matching group of players. Create a new one instead.
+
                 let group: Group = {
                     playerIds: selectedPlayers.map((player) => { return player.storageId; }),
-					loadedPlayers: selectedPlayers,
-					playerPoints: []
-                };
-				this.addGroup(group);
+					playerPoints: {}
+				};
 
-				groupMatch = group;
-            }
+				// Since this is a new group then the player points won't be setup yet.
+				group.playerIds.forEach((id: string) => {
+					group.playerPoints[id] = 1;
+				});
 
-            this.navController.push(GroupPage, { 'group': groupMatch });
+				this.addGroup(group).then((addedGroup: Group) => {
+					group.storageId = addedGroup.storageId;
+					group.loadedPlayers = selectedPlayers;
+					this.navController.push(GroupPage, { 'group': group });
+				});
+
+			}
+			else {
+				this.navController.push(GroupPage, { 'group': groupMatch });
+			}
+
         }).catch((reason: any) => {
-            console.log(`There was an error loading the groups. Error ${reason}`);
+            console.error(`There was an error loading the groups. Error ${reason}`);
         });
 
     }
 
     public addGroup(group: Group): Promise<Group> {
-        return this.storage.addGroup(group);
+        return this.appStorage.addGroup(group);
 	}
 
 	public updatePlayersSelected($event): void {
@@ -151,11 +162,11 @@ export class PlayersPage {
 	}
 
 	private getGroups(): Promise<Group[]> {
-        return this.storage.getGroups();
+        return this.appStorage.getGroups();
     }
 
     private loadPlayers(refresh: boolean = false): void {
-        this.storage.getPlayers(refresh).then((loadedPlayers: Player[]): void => {
+        this.appStorage.getPlayers(refresh).then((loadedPlayers: Player[]): void => {
             if(this.filteredPlayers.length === 0) {
                 this.filteredPlayers = loadedPlayers;
             }
