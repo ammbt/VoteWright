@@ -50,6 +50,8 @@ export class GroupPage {
 
 		// Save the points to the persisted storage.
 		this.appStorage.updateGroup(this.group);
+
+		this.updatePlayersSelected();
 	}
 
 	private setupPlayers(): void {

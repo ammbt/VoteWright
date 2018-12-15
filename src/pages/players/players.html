@@ -22,9 +22,10 @@
     <ion-list>
         <ion-card ion-item *ngFor="let player of filteredPlayers">
             <ion-card-content>
-                <div>{{player.firstName}} {{player.lastName}}</div>
                 <ion-item>
-					<ion-checkbox [(ngModel)]="player.isPlaying"
+                    <div item-left>{{player.firstName}} {{player.lastName}}</div>
+                    <ion-checkbox item-right
+                        [(ngModel)]="player.isPlaying"
 						(ngModelChange)="updatePlayersSelected($event)">
                     </ion-checkbox>
                 </ion-item>

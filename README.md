@@ -15,3 +15,7 @@ A fair (bear?) and balanced vote tracking system.
 ## Running the app
 ```ionic serve -c```
 
+## Building the app for android
+```ionic cordova build android```
+or
+```ionic cordova build --release android```

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 
 // Main app.
-import { MyApp } from './app.component';
+import { VoteWright } from './app.component';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 // Pages
@@ -19,17 +19,17 @@ import { AppStorage } from '../services/app-storage';
 
 @NgModule({
   declarations: [
-    MyApp,
+    VoteWright,
     PlayersPage,
     GroupPage
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(VoteWright),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
+    VoteWright,
     PlayersPage,
     GroupPage
   ],

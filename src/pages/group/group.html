@@ -11,13 +11,28 @@
 	<ion-list>
 		<ion-card ion-item *ngFor="let player of group.loadedPlayers">
 			<ion-card-content>
-				<div>{{player.firstName}} {{player.lastName}}</div>
-				<div>+{{group.playerPoints[player.storageId]}}</div>
-				<ion-item>
-					<ion-checkbox [(ngModel)]="player.isPlaying"
-						(ngModelChange)="updatePlayersSelected($event)">
-					</ion-checkbox>
-				</ion-item>
+                <ion-grid>
+					<ion-row>
+						<ion-col>
+							<ion-item>
+								{{player.firstName}} {{player.lastName}}
+							</ion-item>
+						</ion-col>
+						<ion-col>
+							<ion-item>
+								+{{group.playerPoints[player.storageId]}}
+							</ion-item>
+						</ion-col>
+						<ion-col>
+							<ion-item>
+								<ion-checkbox
+										[(ngModel)]="player.isPlaying"
+										(ngModelChange)="updatePlayersSelected($event)">
+								</ion-checkbox>
+							</ion-item>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
 			</ion-card-content>
 		</ion-card>
 	</ion-list>
