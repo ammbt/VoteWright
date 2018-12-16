@@ -8,7 +8,7 @@ import { PlayersPage } from '../pages/players/players';
 @Component({
   templateUrl: 'app.html'
 })
-export class MyApp {
+export class VoteWright {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = PlayersPage;
