@@ -1,19 +1,29 @@
 import  firebase, { firestore } from 'firebase/app';
 import 'firebase/firestore';
 import { Injectable } from '@angular/core';
-
 import appConfig from '../../app-config.json';
 import { Player } from '../models/Player';
 import { Group } from '../models/Group';
+import { IStorageObject } from '../models/IStorageObject.js';
 
+/**
+ * The persistant data storage, as a Angular service, for the application.
+ * This currently uses firebase.
+ *
+ * @export
+ * @class AppStorage
+ */
 @Injectable()
 export class AppStorage {
-    private readonly playersCollection: string = "Players";
-    private readonly groupsCollection: string = "Groups";
+	// The firebase storage collections for the different data types.
+	private readonly playersCollection: string = "Players";
+	private readonly groupsCollection: string = "Groups";
+
     private breakException: ExceptionInformation = {};
 
     private database: firestore.Firestore;
 
+	// Local caches for the players and groups.
     private groupCache: Group[];
     private playerCache: Player[];
 
@@ -39,7 +49,16 @@ export class AppStorage {
         this.playerCache = [];
     }
 
-    public getPlayers(refresh: boolean = false): Promise<Player[]> {
+    /**
+	 * Retrieve the persisted players from the cache or storage.
+	 *
+	 * @param {boolean} [refresh=false] Force refreshing the players from storage
+	 * if this is true.
+	 * @returns {Promise<Player[]>} The Promise with the collection of players from
+	 * the cache or storage.
+	 * @memberof AppStorage
+	 */
+	public getPlayers(refresh: boolean = false): Promise<Player[]> {
         if(!refresh && this.playerCache.length > 0) {
             return Promise.resolve(this.playerCache);
         }
@@ -47,7 +66,16 @@ export class AppStorage {
         return this.getObjects<Player>(this.playersCollection, 'playerCache');
     }
 
-    public addPlayer(player: Player): Promise<Player> {
+    /**
+	 * Adds a player to storage. This will not add a player if a player
+	 * already exists with the same first and last name.
+	 *
+	 * @param {Player} player The player to persist.
+	 * @returns {Promise<Player>} The player that was added to storage. This should
+	 * have the storageId for the new player.
+	 * @memberof AppStorage
+	 */
+	public addPlayer(player: Player): Promise<Player> {
         let matchingPlayer: Player = this.playerCache.find((p: Player) => {
             return (p.storageId && p.storageId === player.storageId)
                 || (p.firstName === player.firstName && p.lastName === player.lastName);
@@ -58,7 +86,15 @@ export class AppStorage {
         }
     }
 
-    public getGroups(refresh: boolean = false): Promise<Group[]> {
+    /**
+	 * Retrieve the groups from the cache or storage.
+	 *
+	 * @param {boolean} [refresh=false] If true, forces a reload of the groups from
+	 * storage.
+	 * @returns {Promise<Group[]>} The groups from the cache or storage.
+	 * @memberof AppStorage
+	 */
+	public getGroups(refresh: boolean = false): Promise<Group[]> {
         if(!refresh && this.groupCache.length > 0) {
             return Promise.resolve(this.groupCache);
         }
@@ -66,7 +102,15 @@ export class AppStorage {
         return this.getObjects<Group>(this.groupsCollection, 'groupCache');
     }
 
-    public addGroup(group: Group): Promise<Group> {
+    /**
+	 * Add a group to storage. Only add the group if the group with the same
+	 * players does not already exist.
+	 *
+	 * @param {Group} group The group to persist.
+	 * @returns {Promise<Group>} The persisted group with its storageId.
+	 * @memberof AppStorage
+	 */
+	public addGroup(group: Group): Promise<Group> {
         let matchingGroup: Group = this.groupCache.find((g: Group) => {
             if(g.storageId && g.storageId === group.storageId) {
                 return true;
@@ -75,6 +119,7 @@ export class AppStorage {
             try {
                 g.playerIds.forEach((id: string, index: number) => {
                     if(group.playerIds[index] !== id) {
+						// Short circuit the loop since this group is not a match.
                         throw this.breakException;
                     }
                 });
@@ -110,6 +155,12 @@ export class AppStorage {
         return Promise.resolve(matchingGroup);
 	}
 
+	/**
+	 * Update the persisted data for a group.
+	 *
+	 * @param {Group} group The group to update.
+	 * @memberof AppStorage
+	 */
 	public updateGroup(group: Group): void {
 		// We only want to store the properties we need.
 		let storageGroup: Group = {
@@ -117,11 +168,49 @@ export class AppStorage {
 			playerPoints: group.playerPoints
 		}
 
-		this.database.collection(this.groupsCollection).doc(group.storageId).set(storageGroup).catch((reason: any) => {
-			console.error(`Unable to update the group with id ${group.storageId}. Error: ${reason}`);
-		}) ;
+		this.updateObject<Group>(group, storageGroup, this.groupsCollection);
 	}
 
+
+	/**
+	 * Update the persisted data for a player.
+	 *
+	 * @param {Player} player The player to update.
+	 * @memberof AppStorage
+	 */
+	public updatePlayer(player: Player): void {
+		let storagePlayer: Player = {
+			firstName: player.firstName,
+			lastName: player.lastName,
+			lastPlayDate: player.lastPlayDate
+		};
+
+		this.updateObject<Player>(player, storagePlayer, this.playersCollection);
+	}
+
+	/**
+	 * Update an IStorageObject in storage.
+	 *
+	 * @private
+	 * @template T
+	 * @param {T} object The original object to update.
+	 * @param {T} storageObject The object stripped down to just persisted properties.
+	 * @param {string} collection The storage collection this object belongs to.
+	 * @memberof AppStorage
+	 */
+	private updateObject<T extends IStorageObject>(object: T, storageObject: T, collection: string) {
+		this.database.collection(collection).doc(object.storageId).set(storageObject).catch((reason: any) => {
+			console.error(`Unable to update the item in storage with id ${object.storageId}. Error: ${reason}`);
+		});
+	}
+
+	/**
+	 * Get the players for a group.
+	 *
+	 * @param {Group} group The group to retrieve the players from.
+	 * @returns {Promise<Player[]>} The players in the group.
+	 * @memberof AppStorage
+	 */
 	public getPlayersForGroup(group: Group): Promise<Player[]> {
 		if(this.playerCache.length === 0) {
 			return this.getPlayers().then((players: Player[]) => {
@@ -133,6 +222,14 @@ export class AppStorage {
 		}
 	}
 
+	/**
+	 * Get the players for a group from the cache.
+	 *
+	 * @private
+	 * @param {Group} group The group to get the players from.
+	 * @returns {Promise<Player[]>} The loaded players from the group.
+	 * @memberof AppStorage
+	 */
 	private getPlayersForGroupViaCache(group: Group): Promise<Player[]> {
 		let players: Player[] = [];
 		group.playerIds.forEach((id: string) => {
@@ -142,6 +239,14 @@ export class AppStorage {
 		return Promise.resolve(players);
 	}
 
+	/**
+	 * Get a player from the cache using the player id.
+	 *
+	 * @private
+	 * @param {string} id The storage id of the player to get.
+	 * @returns {Player} The player that matches the storage id.
+	 * @memberof AppStorage
+	 */
 	private getPlayerFromCache(id: string): Player {
 		try{
 			this.playerCache.forEach((player: Player) => {
@@ -158,10 +263,21 @@ export class AppStorage {
 		return null;
 	}
 
-    private addObject<T>(collection: string, objectToAdd: T): Promise<T> {
+    /**
+	 * Persists an object to storage.
+	 *
+	 * @private
+	 * @template T
+	 * @param {string} collection The name of the collection to store the object to.
+	 * @param {T} objectToAdd The object to persist to storage.
+	 * @returns {Promise<T>} The Promise with the stored object. This should contain
+	 * the storage id.
+	 * @memberof AppStorage
+	 */
+	private addObject<T extends IStorageObject>(collection: string, objectToAdd: T): Promise<T> {
         let objectJson = JSON.parse(JSON.stringify(objectToAdd));
         return this.database.collection(collection).add(objectJson).then((docRef: firestore.DocumentReference): T => {
-            objectToAdd['storageId'] = docRef.id
+            objectToAdd.storageId = docRef.id
             return objectToAdd;
         }).catch((reason: any): T => {
             console.error(`Error adding object to ${collection} firebase collection. Error: ${reason}`);
@@ -169,7 +285,17 @@ export class AppStorage {
         });
     }
 
-    private getObjects<T>(collection: string, cachePropertyName: string): Promise<T[]> {
+    /**
+	 * Retrieves an array of objects from storage.
+	 *
+	 * @private
+	 * @template T
+	 * @param {string} collection The storage collection to retrieve the objects from.
+	 * @param {string} cachePropertyName The name of the cache to store these objects to.
+	 * @returns {Promise<T[]>}
+	 * @memberof AppStorage
+	 */
+	private getObjects<T extends IStorageObject>(collection: string, cachePropertyName: string): Promise<T[]> {
         return this.database.collection(collection).get().then((results: firebase.firestore.QuerySnapshot): T[] => {
             this[cachePropertyName] = [];
             results.forEach((snapshot: firebase.firestore.QueryDocumentSnapshot) => {
@@ -179,7 +305,7 @@ export class AppStorage {
                     object[property] = rawPlayerData[property];
                 }
 
-                object['storageId'] = snapshot.id;
+                object.storageId = snapshot.id;
                 this[cachePropertyName].push(object);
             });
 

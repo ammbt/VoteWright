@@ -6,17 +6,25 @@ import { Player } from '../../models/Player';
 import { GroupPage } from '../group/group';
 import { Group } from '../../models/Group';
 
+/**
+ * The view model for a player page. This should show the players and allow them
+ * to be selected to form a group.
+ */
 @Component({
     selector: 'page-players',
     templateUrl: 'players.html'
 })
 export class PlayersPage {
 
-    private players: Player[];
-	private filteredPlayers: Player[];
+	private players: Player[];
+
+	// These fields are bound to the view. If these are changed the bindings should
+	// be updated in the html view template.
+	public filteredPlayers: Player[];
 	public arePlayersSelected: boolean;
 
-    // Input fields.
+	// These fields are bound to user input fields. If these are changed the bindings
+	// should be updated in the html view template.
     private playerFilterInput: string;
     private playerFirstName: string;
     private playerLastName: string;
@@ -27,27 +35,44 @@ export class PlayersPage {
         this.loadPlayers();
     }
 
+	/**
+	 * This fires when input changes in the search filter. This performs the actual
+	 * filtering and updates the bound data models with the filtered results.
+	 */
     public onInputFilterResults(): void {
+		// Only filter the results if the input is not null or empty.
         if (this.playerFilterInput && this.playerFilterInput.length > 0) {
             this.filteredPlayers = this.players.filter((player: Player) => {
+				// This regular expression matches anything(.*) then the filter input,
+				// followed by anything(.*) and ignores case.
                 let regex = new RegExp( `.*${this.playerFilterInput}.*`, "i");
                 let matchesFirstName: RegExpMatchArray = player.firstName.match(regex);
-                let matchesLastName: RegExpMatchArray = player.lastName.match(regex);
+				let matchesLastName: RegExpMatchArray = player.lastName.match(regex);
+
+				// If either the first or last name matches any of the filter input
+				// then we want to include this player in the filtered results.
                 if ((matchesFirstName && matchesFirstName.length > 0) || (matchesLastName && matchesLastName.length > 0)) {
                     return true;
                 }
             });
         }
         else {
+			// If the filter is empty don't filter at all.
             this.filteredPlayers = this.players;
         }
     }
 
+	/**
+	 * This fires when the filter UI is cleared or cancelled.
+	 */
     public onClearOrCancelFilter(): void {
         this.filteredPlayers = this.players;
         this.playerFilterInput = "";
     }
 
+	/**
+	 * This fires when the UI for adding a player is activated.
+	 */
     public addPlayer(): void {
         let player: Player =  {
             firstName: this.playerFirstName,
@@ -64,15 +89,26 @@ export class PlayersPage {
         });
     }
 
+	/**
+	 * This fires when the UI for navigating to a group is activated.
+	 * This performs the logic for determining if a group is a new group or not
+	 * and either creating the new group or loading the existing group and
+	 * handing it off to the group page.
+	 */
     public gotoGroupPage(): void {
-        // If the group exists load it otherwise create a new group.
+        // First off load all the groups.
         this.getGroups().then((groups: Group[]) => {
-            let groupMatch: Group;
+			let groupMatch: Group;
+
+			// Filter down to only the selected players.
             let selectedPlayers: Player[] = this.players.filter((player: Player) => {
-                return player.isPlaying;
+                return player.isSelected;
             });
 
             try{
+				// Go through each group and see if the group has the same # of players
+				// as selected and that all those players are the players in the group.
+				// If all of that is true then the group is a match.
                 groups.forEach((group: Group) => {
                     try {
                         if(group.playerIds.length === selectedPlayers.length) {
@@ -80,20 +116,28 @@ export class PlayersPage {
                                 try {
                                     selectedPlayers.forEach((player) => {
                                         if(player.storageId === memberId) {
+											// Short circuit the foreach loop since we
+											// found the player.
                                             throw { playerFound: true };
                                         }
 
                                     });
 
+									// We've gone through all the players and no match.
+									// Short circuit the group loop since this can't
+									// be the right group.
 									throw { playerFound: false };
                                 }
                                 catch(playerFoundBreakException) {
                                     if(!playerFoundBreakException.playerFound) {
-										// Player not found in this group.
+										// Player not found in this group, re-throw to
+										// continue the short circuit of the group's
+										// player loop.
                                         throw playerFoundBreakException;
                                     }
 
-                                    // The player was found.
+									// The player was found. Continue checking the rest
+									// of the players in this group.
                                 }
                             });
 
@@ -119,7 +163,6 @@ export class PlayersPage {
 
             if(!groupMatch) {
 				// We didn't find a matching group of players. Create a new one instead.
-
                 let group: Group = {
                     playerIds: selectedPlayers.map((player) => { return player.storageId; }),
 					playerPoints: {}
@@ -147,23 +190,52 @@ export class PlayersPage {
 
     }
 
-    public addGroup(group: Group): Promise<Group> {
+
+    /**
+	 * Persists a new group to storage.
+	 *
+	 * @param {Group} group The group to persist
+	 * @returns {Promise<Group>} The resulting Promise with the stored group.
+	 * @memberof PlayersPage
+	 */
+	public addGroup(group: Group): Promise<Group> {
         return this.appStorage.addGroup(group);
 	}
 
+
+	/**
+	 * Makes necessary changes when a player is selected.
+	 *
+	 * @memberof PlayersPage
+	 */
 	public updatePlayersSelected(): void {
 		let playersSelected: Player[] = this.players.filter((player: Player) => {
-			return player.isPlaying;
+			return player.isSelected;
 		});
 
 		this.arePlayersSelected = playersSelected.length > 0;
 	}
 
+	/**
+	 * Load the groups from storage.
+	 *
+	 * @private
+	 * @returns {Promise<Group[]>} The Promise with groups from storage.
+	 * @memberof PlayersPage
+	 */
 	private getGroups(): Promise<Group[]> {
         return this.appStorage.getGroups();
     }
 
-    private loadPlayers(refresh: boolean = false): void {
+    /**
+	 * Loads the players from storage.
+	 *
+	 * @private
+	 * @param {boolean} [refresh=false] Storage will load the players from cache unless
+	 * refresh is true.
+	 * @memberof PlayersPage
+	 */
+	private loadPlayers(refresh: boolean = false): void {
         this.appStorage.getPlayers(refresh).then((loadedPlayers: Player[]): void => {
 			this.players = loadedPlayers;
 			this.onClearOrCancelFilter();
