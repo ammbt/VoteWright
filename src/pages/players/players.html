@@ -3,7 +3,7 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-    <ion-title>Vote Wright</ion-title>
+    <ion-title>Vote Wright - Players</ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -25,7 +25,7 @@
                 <ion-item>
                     <div item-left>{{player.firstName}} {{player.lastName}}</div>
                     <ion-checkbox item-right
-                        [(ngModel)]="player.isPlaying"
+                        [(ngModel)]="player.isSelected"
 						(ngModelChange)="updatePlayersSelected($event)">
                     </ion-checkbox>
                 </ion-item>

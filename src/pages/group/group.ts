@@ -5,18 +5,30 @@ import { AppStorage } from '../../services/app-storage';
 import { Player } from '../../models/Player';
 import  moment  from 'moment';
 
+/**
+ * The view model for a group page. This should show the players in the group, their points
+ * and allow the user to select a player or players who won the vote.
+ */
 @Component({
     selector: 'page-group',
     templateUrl: 'group.html'
 })
 export class GroupPage {
+	// These fields are bound to the view. If these are changed the bindings should
+	// be updated in the html view template.
 	public group: Group;
 	public arePlayersSelected: boolean = false;
 
-	constructor(public navCtrl: NavController, private appStorage: AppStorage, public navParams: NavParams) {
+	constructor(public navCtrl: NavController, private appStorage: AppStorage,
+			public navParams: NavParams) {
+		// The group passed in via navigation. This is required, otherwise there is no group
+		// to display.
 		this.group = navParams.data['group'] as Group;
 
-		if(!this.group.loadedPlayers) {
+		// Special assert syntax x!.property says asserts that x must be non-null.
+		// Here we are saying group must be non-null.
+		if(!this.group!.loadedPlayers) {
+			// Load the players since we don't have them yet.
 			this.appStorage.getPlayersForGroup(this.group).then((players: Player[]) => {
 				this.group.loadedPlayers = players;
 				this.setupPlayers();
@@ -27,24 +39,35 @@ export class GroupPage {
 		}
 	}
 
+	/**
+	 * Updates anything when player selection changes. This is bound to the player
+	 *  selection UI (checkbox).
+	 */
 	public updatePlayersSelected(): void {
 		let playersSelected: Player[] = this.group.loadedPlayers.filter((player: Player) => {
-			return player.isPlaying;
+			return player.isSelected;
 		});
 
 		this.arePlayersSelected = playersSelected.length > 0;
 	}
 
+	/**
+	 * Update the points for the players based on whether the players is selected
+	 * (won) the vote.
+	 */
 	public updatePoints(): void {
 		this.group.loadedPlayers.forEach((player: Player) => {
-			if(player.isPlaying) {
+			if(player.isSelected) {
+				// If the player won the vote reset their points and unselect them.
 				player.points = 1;
-				player.isPlaying = false;
+				player.isSelected = false;
 			}
 			else {
+				// The player did not win the vote, increase their points.
 				player.points++;
 			}
 
+			// Update the player point mappings so that we can persist them.
 			this.group.playerPoints[player.storageId] = player.points;
 		});
 
@@ -54,6 +77,9 @@ export class GroupPage {
 		this.updatePlayersSelected();
 	}
 
+	/**
+	 * Do some basic setup on the loaded players.
+	 */
 	private setupPlayers(): void {
 		this.group.loadedPlayers.forEach((player: Player) => {
 			// Map the points for this player to the loaded player.
@@ -63,8 +89,10 @@ export class GroupPage {
 			player.lastPlayDate = moment().format();
 
 			// Reset this since we use this to track whether the player won the vote or not.
-			player.isPlaying = false;
+			player.isSelected = false;
+
+			// Persist the player so that we capture the last play date.
+			this.appStorage.updatePlayer(player);
 		});
 	}
-
 }

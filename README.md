@@ -12,6 +12,22 @@ A fair (bear?) and balanced vote tracking system.
 * In the app directory run
 ```npm install```
 
+## Configuration
+Currently in order to run the app locally or build it as an app you need to provide 
+the configuration for connecting to firebase. You will need to add app-config.json
+to the root and configure the following values (which can be retrieved from your
+firebase account.)
+```
+{
+    "firebaseKey": "",
+    "firebaseDomain": "",
+    "firebaseURL": "",
+    "firebaseProjectId": "",
+    "firebaseStorageBucket": "",
+    "firebaseMessagingSenderId": ""
+}
+```
+
 ## Running the app
 ```ionic serve -c```
 
@@ -19,3 +35,19 @@ A fair (bear?) and balanced vote tracking system.
 ```ionic cordova build android```
 or
 ```ionic cordova build --release android```
+
+
+## TODOs
+### Theming
+- [ ] New CSS color palettes.
+- [ ] New custom images/icons.
+- [ ] New font?
+### UI/UX
+- [ ] General improvements to the flow and behavior of the app.
+- [ ] Disable the add player button when the input fields are not set.
+- [ ] Add a sort by last played to the players list
+- [ ] Add a filter by last played to the players list
+- [ ] Add a new page for displaying and selecting groups as an alternative to selecting players. This should match some of the behavior of the players page (searching, filtering, etc.)
+### Add login
+- [ ] Use social media account (Facebook?) for OAuth.
+- [ ] Enable security in firebase based on user.
