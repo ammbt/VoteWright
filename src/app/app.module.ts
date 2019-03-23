@@ -7,6 +7,7 @@ import { VoteWright } from './app.component';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 // Pages
+import { LoginPage } from '../pages/login/login';
 import { PlayersPage } from '../pages/players/players';
 import { GroupPage } from '../pages/group/group';
 
@@ -16,10 +17,12 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 // Service Providers
 import { AppStorage } from '../services/app-storage';
+import { Authentication } from '../services/authentication';
 
 @NgModule({
   declarations: [
     VoteWright,
+	LoginPage,
     PlayersPage,
     GroupPage
   ],
@@ -30,10 +33,12 @@ import { AppStorage } from '../services/app-storage';
   bootstrap: [IonicApp],
   entryComponents: [
     VoteWright,
+	LoginPage,
     PlayersPage,
     GroupPage
   ],
   providers: [
+	Authentication,
     StatusBar,
     SplashScreen,
     AppStorage,

@@ -1,13 +1,12 @@
 import  firebase, { firestore } from 'firebase/app';
 import 'firebase/firestore';
 import { Injectable } from '@angular/core';
-import appConfig from '../../app-config.json';
 import { Player } from '../models/Player';
 import { Group } from '../models/Group';
 import { IStorageObject } from '../models/IStorageObject.js';
 
 /**
- * The persistant data storage, as a Angular service, for the application.
+ * The persistent data storage, as an Angular service, for the application.
  * This currently uses firebase.
  *
  * @export
@@ -28,17 +27,6 @@ export class AppStorage {
     private playerCache: Player[];
 
     constructor() {
-        // Initialize Firebase
-        let config = {
-            apiKey: appConfig.firebaseKey,
-            authDomain: appConfig.firebaseDomain,
-            databaseURL: appConfig.firebaseURL,
-            projectId: appConfig.firebaseProjectId,
-            storageBucket: appConfig.firebaseStorageBucket,
-            messagingSenderId: appConfig.firebaseMessagingSenderId
-        };
-
-        firebase.initializeApp(config);
         this.database = firebase.firestore();
         let settings: firestore.Settings = {
             timestampsInSnapshots: true

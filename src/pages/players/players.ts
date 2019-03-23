@@ -30,7 +30,7 @@ export class PlayersPage {
     private playerLastName: string;
 
     constructor(public navController: NavController, private appStorage: AppStorage) {
-        this.players = [];
+		this.players = [];
         this.filteredPlayers = [];
         this.loadPlayers();
     }
@@ -239,6 +239,9 @@ export class PlayersPage {
         this.appStorage.getPlayers(refresh).then((loadedPlayers: Player[]): void => {
 			this.players = loadedPlayers;
 			this.onClearOrCancelFilter();
-        } );
+        } ).catch((reason:any) => {
+			console.error("There was an error loading the players." + reason);
+		});
+
     }
 }
