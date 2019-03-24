@@ -22,6 +22,7 @@ export class PlayersPage {
 	// be updated in the html view template.
 	public filteredPlayers: Player[];
 	public arePlayersSelected: boolean;
+	public sortByMostRecentlyPlayed: boolean;
 
 	// These fields are bound to user input fields. If these are changed the bindings
 	// should be updated in the html view template.
@@ -32,7 +33,7 @@ export class PlayersPage {
     constructor(public navController: NavController, private appStorage: AppStorage) {
 		this.players = [];
         this.filteredPlayers = [];
-        this.loadPlayers();
+		this.loadPlayers();
     }
 
 	/**
@@ -217,6 +218,20 @@ export class PlayersPage {
 	}
 
 	/**
+	 * Sorts the players.
+	 *
+	 * @memberof PlayersPage
+	 */
+	public sortPlayers(): void {
+		if(this.sortByMostRecentlyPlayed) {
+			this.players = this.sortPlayersByLastedPlayDate(this.players);
+		}
+		else {
+			this.players = this.sortPlayersAlphabetically(this.players);
+		}
+	}
+
+	/**
 	 * Load the groups from storage.
 	 *
 	 * @private
@@ -238,10 +253,57 @@ export class PlayersPage {
 	private loadPlayers(refresh: boolean = false): void {
         this.appStorage.getPlayers(refresh).then((loadedPlayers: Player[]): void => {
 			this.players = loadedPlayers;
+			this.sortPlayers();
 			this.onClearOrCancelFilter();
         } ).catch((reason:any) => {
 			console.error("There was an error loading the players." + reason);
 		});
+	}
 
-    }
+	/**
+	 * Sorts an array of Players by their first then last name.
+	 *
+	 * @param players The array of players to sort.
+	 * @returns {Player[]} The sorted array of players.
+	 * @memberof PlayersPage
+	 */
+	private sortPlayersAlphabetically(players: Player[]): Player[] {
+		return players.sort((playerA: Player, playerB: Player) => {
+			if (playerA.firstName > playerB.firstName || (playerA.firstName === playerB.firstName && playerA.lastName > playerB.lastName)) {
+				// playerA sorts before playerB
+				return 1;
+			}
+
+			if (playerA.firstName < playerB.firstName || (playerA.firstName === playerB.firstName && playerA.lastName < playerB.lastName)) {
+				// playerB sorts before playerA
+				return -1;
+			}
+
+			// The names are identical.
+			return 0;
+		});
+	}
+
+	/**
+	 * Sorts an array of Players by their last play date, from most recently played to least.
+	 *
+	 * @param players The array of players to sort.
+	 * @returns {Player[]} The sorted array of players.
+	 * @memberof PlayersPage
+	 */
+	private sortPlayersByLastedPlayDate(players: Player[]): Player[] {
+		return players.sort((playerA: Player, playerB: Player) => {
+			if(playerA.lastPlayDate > playerB.lastPlayDate) {
+				return -1;
+			}
+
+			if(playerA.lastPlayDate === playerB.lastPlayDate) {
+				return 0;
+			}
+
+			if(playerA.lastPlayDate < playerB.lastPlayDate) {
+				return 1;
+			}
+		});
+	}
 }

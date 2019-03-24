@@ -41,8 +41,8 @@ or
 ### Accessibility
 - [ ] Always visible labels on form fields. - Tom
 ### Add login
-- [ ] Use social media account (Facebook?) for OAuth.
-- [ ] Enable security in firebase based on user.
+- [x] Use social media account (Facebook?) for OAuth.
+- [x] Enable security in firebase based on user.
 ### Theme
 - [ ] New CSS color palettes. - Molly
 - [ ] New custom icons.
@@ -54,6 +54,6 @@ or
 - [ ] Toggle editable point fields.
 - [ ] Improve the update points button (better text and placement). - Molly
 - [ ] Disable the add player button when the input fields are not set.
-- [ ] Add a sort by last played to the players list
+- [x] Add a sort by last played to the players list
 - [ ] Add a filter by last played to the players list
 - [ ] Add a new page for displaying and selecting groups as an alternative to selecting players. This should match some of the behavior of the players page (searching, filtering, etc.)

@@ -18,7 +18,11 @@
         [showCancelButton]="true"
         debounce=250
         placeholder="Start typing to filter">
-    </ion-searchbar>
+	</ion-searchbar>
+	<ion-item>
+		<ion-label>Sort by most recently played</ion-label>
+		<ion-toggle [(ngModel)]="sortByMostRecentlyPlayed" (ngModelChange)="sortPlayers()"></ion-toggle>
+	</ion-item>
     <ion-list>
         <ion-card ion-item *ngFor="let player of filteredPlayers">
             <ion-card-content>
