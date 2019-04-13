@@ -18,6 +18,7 @@ export class GroupPage {
 	// be updated in the html view template.
 	public group: Group;
 	public arePlayersSelected: boolean = false;
+	public isEditMode: boolean = false;
 
 	constructor(public navCtrl: NavController, private appStorage: AppStorage,
 			public navParams: NavParams) {
@@ -51,6 +52,27 @@ export class GroupPage {
 		this.arePlayersSelected = playersSelected.length > 0;
 	}
 
+	/**
+	 * Allows the point listed to become editabl.e
+	 */
+	public editPoints(): void {
+		this.isEditMode = !this.isEditMode;
+	}
+
+	/**
+	 * Allows the user to manually edit points. This is bound to the player.points (which
+	 * does not persist) in the UI. To be used when a mistake was made upon incorrect/accidental
+	 * use of updatePoints().
+	 */
+	public updatePlayerPoints(): void {
+		this.group.loadedPlayers.forEach((player: Player) => {
+			// Update the player point mappings so that we can persist them.
+			this.group.playerPoints[player.storageId] = player.points;
+		});
+
+		// Save the points to the persisted storage.
+		this.appStorage.updateGroup(this.group);
+	}
 	/**
 	 * Update the points for the players based on whether the players is selected
 	 * (won) the vote.

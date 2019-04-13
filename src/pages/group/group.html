@@ -18,9 +18,17 @@
 								{{player.firstName}} {{player.lastName}}
 							</ion-item>
 						</ion-col>
-						<ion-col>
+						<ion-col class="points">
+								<ion-item class="plus">
+									+
+								</ion-item>
 							<ion-item>
-								+{{group.playerPoints[player.storageId]}}
+								<ion-input
+									[readonly]="!isEditMode"
+									[(ngModel)]="player.points"
+									type="number"
+									(ionChange)="updatePlayerPoints()">
+								</ion-input>
 							</ion-item>
 						</ion-col>
 						<ion-col>
@@ -41,6 +49,15 @@
 			primary
 			[disabled]="!arePlayersSelected"
 			(tap)="updatePoints()">
-		Update points
+		Update Points
 	</button>
+
+	<ion-fab right bottom>
+		<button ion-fab
+				[disabled] = "arePlayersSelected"
+                color="primary"
+                (tap)="editPoints()">
+            <ion-icon name="create"></ion-icon>
+        </button>
+	</ion-fab>
 </ion-content>
