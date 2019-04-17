@@ -83,24 +83,38 @@ $colors: (
 
 // Fonts
 // --------------------------------------------------
+	// Used for most of the app
+	@import "roboto";
+	@import "noto-sans";
 
-// @import "roboto";
-// @import "noto-sans";
+	// Used for headers & toolbar title
+	@font-face {
+		font-family: 'Champagne-Bold';
+		font-style: normal;
+		font-weight: 900;
+		src: url('../assets/fonts/Champagne-Bold.ttf');
+	}
 
-@font-face {
-  font-family: 'Champagne-Bold';
-  font-style: normal;
-  font-weight: 900;
-  src: url('../assets/fonts/Champagne-Bold.ttf');
-}
+	.toolbar-title-md {
+		font-family: "Champagne-Bold";
+		font-size: 2.5rem !important;
+	}
 
-.toolbar-title-md {
-    font-family: "Champagne-Bold";
-    font-size: 2.5rem !important;
-}
+	@for $i from 1 through 6 {
+		h#{$i} {
+			font-family: "Champagne-Bold";
+		}
+	}
 
-@for $i from 1 through 6 {
-  h#{$i} {
-    font-family: "Champagne-Bold";
-  }
-}
+// Margins
+// --------------------------------------------------
+// Create a margin around the entire main area
+    .scroll-content {
+		padding: 16px;
+	}
+
+// Align
+// --------------------------------------------------
+	.alignright {
+		text-align: right !important;
+	}

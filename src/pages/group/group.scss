@@ -1,31 +1,3 @@
 page-group {
 
-    // Sets plus on the same line of point value
-    ion-col.points {
-        display: inline-flex;
-
-        ion-item.plus {
-            width: 25%;
-        }
-
-        ion-item.item-input {
-            width: 37%;
-            padding-left: 0;
-        }
-    }
-
-    // Pushes checkbox to the right
-    .item.item-md .checkbox-md {
-        margin-left: 70%;
-    }
-
-    // Create a margin around the entire main area
-    .scroll-content {
-        padding: 16px;
-    }
-
-    // Move list item to the left to compensate from margin around entire main area
-    ion-card {
-        padding-left: 0;
-    }
 }

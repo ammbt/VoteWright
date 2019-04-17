@@ -45,6 +45,10 @@ export class GroupPage {
 	 *  selection UI (checkbox).
 	 */
 	public updatePlayersSelected(): void {
+		if (this.isEditMode) {
+			this.isEditMode = false;
+		}
+
 		let playersSelected: Player[] = this.group.loadedPlayers.filter((player: Player) => {
 			return player.isSelected;
 		});
@@ -53,9 +57,9 @@ export class GroupPage {
 	}
 
 	/**
-	 * Allows the point listed to become editabl.e
+	 * Toggles the edit functionality.
 	 */
-	public editPoints(): void {
+	public toggleEditMode(): void {
 		this.isEditMode = !this.isEditMode;
 	}
 
@@ -64,29 +68,40 @@ export class GroupPage {
 	 * does not persist) in the UI. To be used when a mistake was made upon incorrect/accidental
 	 * use of updatePoints().
 	 */
-	public updatePlayerPoints(): void {
-		this.group.loadedPlayers.forEach((player: Player) => {
-			// Update the player point mappings so that we can persist them.
-			this.group.playerPoints[player.storageId] = player.points;
-		});
+	public editPoints(): void {
+		if (this.isEditMode) {
+			this.updatePointsHelper();
 
-		// Save the points to the persisted storage.
-		this.appStorage.updateGroup(this.group);
+			// Save the points to the persisted storage.
+			this.appStorage.updateGroup(this.group);
+		}
 	}
 	/**
 	 * Update the points for the players based on whether the players is selected
 	 * (won) the vote.
 	 */
 	public updatePoints(): void {
+		this.updatePointsHelper();
+
+		this.updatePlayersSelected();
+	}
+
+	/**
+	 * Helper method used to edit points (manually) and update points (through the
+	 * use of the checkboxes).
+	 */
+	private updatePointsHelper(): void {
 		this.group.loadedPlayers.forEach((player: Player) => {
-			if(player.isSelected) {
-				// If the player won the vote reset their points and unselect them.
-				player.points = 1;
-				player.isSelected = false;
-			}
-			else {
-				// The player did not win the vote, increase their points.
-				player.points++;
+			if (!this.isEditMode) {
+				if(player.isSelected) {
+					// If the player won the vote reset their points and unselect them.
+					player.points = 1;
+					player.isSelected = false;
+				}
+				else {
+					// The player did not win the vote, increase their points.
+					player.points++;
+				}
 			}
 
 			// Update the player point mappings so that we can persist them.
@@ -95,8 +110,6 @@ export class GroupPage {
 
 		// Save the points to the persisted storage.
 		this.appStorage.updateGroup(this.group);
-
-		this.updatePlayersSelected();
 	}
 
 	/**

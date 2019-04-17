@@ -13,27 +13,29 @@
 			<ion-card-content>
                 <ion-grid>
 					<ion-row>
-						<ion-col>
+						<ion-col col-5>
 							<ion-item>
 								{{player.firstName}} {{player.lastName}}
 							</ion-item>
 						</ion-col>
-						<ion-col class="points">
-								<ion-item class="plus">
-									+
-								</ion-item>
+						<ion-col col-2>
+							<ion-item class="alignright">
+								+
+							</ion-item>
+						</ion-col>
+						<ion-col col-2>
 							<ion-item>
 								<ion-input
 									[readonly]="!isEditMode"
 									[(ngModel)]="player.points"
 									type="number"
-									(ionChange)="updatePlayerPoints()">
+									(ionChange)="editPoints()">
 								</ion-input>
 							</ion-item>
 						</ion-col>
-						<ion-col>
+						<ion-col col-3>
 							<ion-item>
-								<ion-checkbox
+								<ion-checkbox item-right
 										[(ngModel)]="player.isSelected"
 										(ngModelChange)="updatePlayersSelected($event)">
 								</ion-checkbox>
@@ -54,9 +56,9 @@
 
 	<ion-fab right bottom>
 		<button ion-fab
-				[disabled] = "arePlayersSelected"
+				[disabled]="arePlayersSelected"
                 color="primary"
-                (tap)="editPoints()">
+                (tap)="toggleEditMode()">
             <ion-icon name="create"></ion-icon>
         </button>
 	</ion-fab>
