@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { ToastController } from 'ionic-angular';
 import  moment  from 'moment';
 import { AppStorage } from '../../services/app-storage';
 import { Player } from '../../models/Player';
@@ -30,7 +31,7 @@ export class PlayersPage {
     private playerFirstName: string;
     private playerLastName: string;
 
-    constructor(public navController: NavController, private appStorage: AppStorage) {
+    constructor(public navController: NavController, private appStorage: AppStorage, public toastController: ToastController) {
 		this.players = [];
         this.filteredPlayers = [];
 		this.loadPlayers();
@@ -72,22 +73,46 @@ export class PlayersPage {
     }
 
 	/**
+	 * Checks if string is only whitespace (tabs, spaces, etc.)
+	 *
+	 * @param str String to check
+	 */
+	private isEmptyString(str: String): boolean {
+		return !str.trim().length;
+	}
+
+	/**
 	 * This fires when the UI for adding a player is activated.
 	 */
-    public addPlayer(): void {
-        let player: Player =  {
-            firstName: this.playerFirstName,
-            lastName: this.playerLastName,
-            lastPlayDate: moment().format()
-        };
+	public addPlayer(): void {
 
-        this.appStorage.addPlayer(player).then((player: Player) => {
-            if(player) {
-                this.playerFirstName = "";
-                this.playerLastName = "";
-                this.loadPlayers(/*refresh*/ true);
-            }
-        });
+		// Check if the first or last name is just whitespace.
+		if (this.isEmptyString(this.playerFirstName) || this.isEmptyString(this.playerLastName)) {
+
+			// If the first or last name is just whitespace, display a message, and do not add new player to database.
+			const toast = this.toastController.create({
+				message: 'Please enter a first and last name for the new player. Don\'t just enter spaces. That\'s just rude.',
+				duration: 3000
+			  });
+
+			  toast.present();
+		}
+		else {
+			// If the first and last name are not just whitespace, enter new player to database.
+			let player: Player =  {
+				firstName: this.playerFirstName,
+				lastName: this.playerLastName,
+				lastPlayDate: moment().format()
+			};
+
+			this.appStorage.addPlayer(player).then((player: Player) => {
+				if(player) {
+					this.playerFirstName = "";
+					this.playerLastName = "";
+					this.loadPlayers(/*refresh*/ true);
+				}
+			});
+		}
     }
 
 	/**

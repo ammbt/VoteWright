@@ -13,19 +13,29 @@
 			<ion-card-content>
                 <ion-grid>
 					<ion-row>
-						<ion-col>
+						<ion-col col-5>
 							<ion-item>
 								{{player.firstName}} {{player.lastName}}
 							</ion-item>
 						</ion-col>
-						<ion-col>
-							<ion-item>
-								+{{group.playerPoints[player.storageId]}}
+						<ion-col col-2>
+							<ion-item class="alignright">
+								+
 							</ion-item>
 						</ion-col>
-						<ion-col>
+						<ion-col col-2>
 							<ion-item>
-								<ion-checkbox
+								<ion-input
+									[readonly]="!isEditMode"
+									[(ngModel)]="player.points"
+									type="number"
+									(ionChange)="updatePointsChanged()">
+								</ion-input>
+							</ion-item>
+						</ion-col>
+						<ion-col col-3>
+							<ion-item>
+								<ion-checkbox item-right
 										[(ngModel)]="player.isSelected"
 										(ngModelChange)="updatePlayersSelected($event)">
 								</ion-checkbox>
@@ -41,6 +51,15 @@
 			primary
 			[disabled]="!arePlayersSelected"
 			(tap)="updatePoints()">
-		Update points
+		Update Points
 	</button>
+
+	<ion-fab right bottom>
+		<button ion-fab
+				[disabled]="arePlayersSelected"
+                color="primary"
+                (tap)="toggleEditMode()">
+            <ion-icon name="create"></ion-icon>
+        </button>
+	</ion-fab>
 </ion-content>

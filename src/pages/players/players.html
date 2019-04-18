@@ -48,7 +48,11 @@
 		placeholder="Last name">
 	</ion-input>
 
-	<button ion-button primary (tap)="addPlayer()">Add Player</button>
+	<button
+		ion-button primary
+		[disabled]="!(playerFirstName && playerLastName)"
+		(tap)="addPlayer()">Add Player
+	</button>
 
     <ion-fab right bottom>
 		<button ion-fab

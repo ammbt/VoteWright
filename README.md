@@ -44,16 +44,16 @@ or
 - [x] Use social media account (Facebook?) for OAuth.
 - [x] Enable security in firebase based on user.
 ### Theme
-- [ ] New CSS color palettes. - Molly
+- [x] New CSS color palettes. - Mallory
 - [ ] New custom icons.
 - [ ] New custom splash page. - Mallory
-- [ ] New font?
+- [x] New font - Mallory
 ### UI/UX
 - [ ] General improvements to the flow and behavior of the app.
 - [ ] Add form fields for direct point input. - Tom
-- [ ] Toggle editable point fields.
+- [x] Toggle editable point fields. - Mallory
 - [ ] Improve the update points button (better text and placement). - Molly
-- [ ] Disable the add player button when the input fields are not set.
+- [x] Disable the add player button when the input fields are not set. - Mallory
 - [x] Add a sort by last played to the players list
 - [ ] Add a filter by last played to the players list
 - [ ] Add a new page for displaying and selecting groups as an alternative to selecting players. This should match some of the behavior of the players page (searching, filtering, etc.)
