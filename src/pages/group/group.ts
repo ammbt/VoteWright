@@ -64,25 +64,22 @@ export class GroupPage {
 	}
 
 	/**
-	 * Allows the user to manually edit points. This is bound to the player.points (which
+	 * Persists manually edited points. This is bound to the player.points (which
 	 * does not persist) in the UI. To be used when a mistake was made upon incorrect/accidental
 	 * use of updatePoints().
 	 */
-	public editPoints(): void {
+	public updatePointsChanged(): void {
 		if (this.isEditMode) {
 			this.updatePointsHelper();
-
-			// Save the points to the persisted storage.
-			this.appStorage.updateGroup(this.group);
 		}
 	}
+
 	/**
 	 * Update the points for the players based on whether the players is selected
 	 * (won) the vote.
 	 */
 	public updatePoints(): void {
 		this.updatePointsHelper();
-
 		this.updatePlayersSelected();
 	}
 

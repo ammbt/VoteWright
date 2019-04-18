@@ -31,7 +31,7 @@ export class PlayersPage {
     private playerFirstName: string;
     private playerLastName: string;
 
-    constructor(public navController: NavController, private appStorage: AppStorage, public toastCtrl: ToastController) {
+    constructor(public navController: NavController, private appStorage: AppStorage, public toastController: ToastController) {
 		this.players = [];
         this.filteredPlayers = [];
 		this.loadPlayers();
@@ -77,23 +77,20 @@ export class PlayersPage {
 	 *
 	 * @param str String to check
 	 */
-	private isEmptyString(str): boolean {
-		if (!str.replace(/\s/g, '').length) {
-			return true;
-		}
-		return false;
+	private isEmptyString(str: String): boolean {
+		return !str.trim().length;
 	}
 
 	/**
 	 * This fires when the UI for adding a player is activated.
 	 */
-    public addPlayer(): void {
+	public addPlayer(): void {
 
 		// Check if the first or last name is just whitespace.
 		if (this.isEmptyString(this.playerFirstName) || this.isEmptyString(this.playerLastName)) {
 
-			// If the first or last name is just whitespace, display a toast message, and do not add new player to database.
-			const toast = this.toastCtrl.create({
+			// If the first or last name is just whitespace, display a message, and do not add new player to database.
+			const toast = this.toastController.create({
 				message: 'Please enter a first and last name for the new player. Don\'t just enter spaces. That\'s just rude.',
 				duration: 3000
 			  });
