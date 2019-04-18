@@ -46,7 +46,7 @@ or
 ### Theme
 - [x] New CSS color palettes. - Mallory
 - [ ] New custom icons.
-- [ ] New custom splash page. - Mallory
+- [x] New custom splash page. - Mallory
 - [x] New font - Mallory
 ### UI/UX
 - [ ] General improvements to the flow and behavior of the app.
