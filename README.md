@@ -45,7 +45,7 @@ or
 - [x] Enable security in firebase based on user.
 ### Theme
 - [x] New CSS color palettes. - Mallory
-- [ ] New custom icons.
+- [x] New custom icons. - Mallory
 - [x] New custom splash page. - Mallory
 - [x] New font - Mallory
 ### UI/UX
