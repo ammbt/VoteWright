@@ -55,5 +55,5 @@ or
 - [ ] Improve the update points button (better text and placement). - Molly
 - [x] Disable the add player button when the input fields are not set. - Mallory
 - [x] Add a sort by last played to the players list
-- [ ] Add a filter by last played to the players list
+- [x] Add a filter by last played to the players list
 - [ ] Add a new page for displaying and selecting groups as an alternative to selecting players. This should match some of the behavior of the players page (searching, filtering, etc.)
