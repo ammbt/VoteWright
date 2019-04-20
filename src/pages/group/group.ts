@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { ToastController } from 'ionic-angular';
 import { Group } from '../../models/Group';
 import { AppStorage } from '../../services/app-storage';
 import { Player } from '../../models/Player';
@@ -20,7 +21,7 @@ export class GroupPage {
 	public arePlayersSelected: boolean = false;
 	public isEditMode: boolean = false;
 
-	constructor(public navCtrl: NavController, private appStorage: AppStorage,
+	constructor(public navCtrl: NavController, private appStorage: AppStorage, public toastController: 			ToastController
 			public navParams: NavParams) {
 		// The group passed in via navigation. This is required, otherwise there is no group
 		// to display.
@@ -61,6 +62,21 @@ export class GroupPage {
 	 */
 	public toggleEditMode(): void {
 		this.isEditMode = !this.isEditMode;
+		//if true toast to let peaple know editting is enabled if true and otherwise toast to let them know editting mode is disabled
+		if (this.isEditMode) {
+			const toast = this.toastController.create({
+				message: 'Editting mode enabled. Don\'t cheat like a cheater.',
+				duration: 3000
+			  });
+		}
+		else{
+			const toast = this.toastController.create({
+				message: 'Editting mode disabled.',
+				duration: 3000
+			  });
+		}
+
+		toast.present();
 	}
 
 	/**
