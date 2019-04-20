@@ -21,7 +21,7 @@ export class GroupPage {
 	public arePlayersSelected: boolean = false;
 	public isEditMode: boolean = false;
 
-	constructor(public navCtrl: NavController, private appStorage: AppStorage, public toastController: 			ToastController
+	constructor(public navCtrl: NavController, private appStorage: AppStorage, public toastController: 			ToastController,
 			public navParams: NavParams) {
 		// The group passed in via navigation. This is required, otherwise there is no group
 		// to display.
