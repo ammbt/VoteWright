@@ -64,19 +64,21 @@ export class GroupPage {
 		this.isEditMode = !this.isEditMode;
 		//if true toast to let peaple know editting is enabled if true and otherwise toast to let them know editting mode is disabled
 		if (this.isEditMode) {
-			const toast = this.toastController.create({
+			const toastEdit = this.toastController.create({
 				message: 'Editting mode enabled. Don\'t cheat like a cheater.',
 				duration: 3000
 			  });
+        toastEdit.present();
 		}
 		else{
-			const toast = this.toastController.create({
+			const toastNoEdit = this.toastController.create({
 				message: 'Editting mode disabled.',
 				duration: 3000
 			  });
+        toastNoEdit.present();
 		}
 
-		toast.present();
+
 	}
 
 	/**

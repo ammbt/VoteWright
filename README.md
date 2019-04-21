@@ -3,8 +3,8 @@ A fair (bear?) and balanced vote tracking system.
 
 ## Dev environment setup
 * Install Node
-* Run the following commands
-```npm install ionic -g```
+* Run the following commands as admin
+```npm install -g ionic cordova```
 
 
 ## Installing the app
@@ -58,3 +58,4 @@ or
 - [ ] Add a filter by last played to the players list
 - [ ] Add a new page for displaying and selecting groups as an alternative to selecting players. This should match some of the behavior of the players page (searching, filtering, etc.)
 - [ ] Check input on editable point fields to be only integers - Brent
+- [ ] Fix hitting back from a group to disallow creating a group with no players - Brent
