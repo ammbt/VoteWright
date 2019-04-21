@@ -57,3 +57,4 @@ or
 - [x] Add a sort by last played to the players list
 - [ ] Add a filter by last played to the players list
 - [ ] Add a new page for displaying and selecting groups as an alternative to selecting players. This should match some of the behavior of the players page (searching, filtering, etc.)
+- [ ] Check input on editable point fields to be only integers - Brent
