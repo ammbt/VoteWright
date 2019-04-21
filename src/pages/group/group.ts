@@ -21,7 +21,7 @@ export class GroupPage {
 	public arePlayersSelected: boolean = false;
 	public isEditMode: boolean = false;
 
-	constructor(public navCtrl: NavController, private appStorage: AppStorage, public toastController: 			ToastController,
+	constructor(public navCtrl: NavController, private appStorage: AppStorage, public toastController: ToastController,
 			public navParams: NavParams) {
 		// The group passed in via navigation. This is required, otherwise there is no group
 		// to display.
@@ -47,7 +47,8 @@ export class GroupPage {
 	 */
 	public updatePlayersSelected(): void {
 		if (this.isEditMode) {
-			this.isEditMode = false;
+			// Turn off edit mode if user selects a player (checkbox)
+			this.toggleEditMode();
 		}
 
 		let playersSelected: Player[] = this.group.loadedPlayers.filter((player: Player) => {
@@ -62,23 +63,24 @@ export class GroupPage {
 	 */
 	public toggleEditMode(): void {
 		this.isEditMode = !this.isEditMode;
-		//if true toast to let peaple know editting is enabled if true and otherwise toast to let them know editting mode is disabled
+
+		//if true toast to let peaple know editing is enabled if true and otherwise toast to let them know editing mode is disabled
 		if (this.isEditMode) {
 			const toastEdit = this.toastController.create({
-				message: 'Editting mode enabled. Don\'t cheat like a cheater.',
+				message: 'Editing mode enabled. Don\'t cheat like a cheater.',
 				duration: 3000
-			  });
+				});
+				
         toastEdit.present();
 		}
 		else{
 			const toastNoEdit = this.toastController.create({
-				message: 'Editting mode disabled.',
+				message: 'Editing mode disabled.',
 				duration: 3000
-			  });
+				});
+				
         toastNoEdit.present();
 		}
-
-
 	}
 
 	/**
