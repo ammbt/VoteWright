@@ -61,3 +61,4 @@ or
 - [ ] Fix hitting back from a group to disallow creating a group with no players - Brent
 - [ ] Require more than 1 player to go to group page - Brent
 - [ ] Automatically add player to list based off their Facebook login? - Brent
+- [ ] Add the ability to log out - Brent
