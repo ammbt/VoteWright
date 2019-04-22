@@ -4,11 +4,19 @@
             <ion-icon name="menu"></ion-icon>
         </button>
     <ion-title>Vote Wright - Players</ion-title>
-    </ion-navbar>
+	</ion-navbar>
+
+	<ion-item>
+		<h2>
+			Selected Players: {{ selectedPlayers.join(", ") }}
+		</h2>
+	</ion-item>
+
 </ion-header>
 
 <ion-content padding>
-    <h3>Players</h3>
+
+    <h3>Pick the Players</h3>
     <ion-searchbar
         class="filter"
         [(ngModel)]="playerFilterInput"
@@ -27,7 +35,7 @@
         <ion-card ion-item *ngFor="let player of filteredPlayers">
             <ion-card-content>
                 <ion-item>
-                    <div item-left>{{player.firstName}} {{player.lastName}}</div>
+                    <div item-left>{{ player.firstName }} {{ player.lastName }}</div>
                     <ion-checkbox item-right
                         [(ngModel)]="player.isSelected"
 						(ngModelChange)="updatePlayersSelected($event)">
