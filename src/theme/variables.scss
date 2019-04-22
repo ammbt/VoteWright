@@ -11,7 +11,6 @@ $font-path: "../assets/fonts";
 // http://ionicframework.com/docs/theming/rtl-support/
 $app-direction: ltr;
 
-
 @import "ionic.globals";
 
 
@@ -118,3 +117,26 @@ $colors: (
 	.alignright {
 		text-align: right !important;
 	}
+	.alignleft {
+		text-align: left !important;
+	}
+
+// Breakpoints
+// --------------------------------------------------
+// Both :root and $grid-breakpoints are needed for the iPhone5
+// compatibility fix.
+:root {
+	--grid-breakpoint-xs: 0;
+	--grid-breakpoint-sm: 515px; // Changing sm for iPhone5 compatibility
+	--grid-breakpoint-md: 768px;
+	--grid-breakpoint-lg: 992px;
+	--grid-breakpoint-xl: 1200px;
+}
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 515px, // Changing sm for iPhone5 compatibility
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+);
