@@ -55,9 +55,10 @@ or
 - [ ] Improve the update points button (better text and placement). - Molly
 - [x] Disable the add player button when the input fields are not set. - Mallory
 - [x] Add a sort by last played to the players list
-- [ ] Add a filter by last played to the players list
+- [x] Add a filter by last played to the players list
 - [ ] Add a new page for displaying and selecting groups as an alternative to selecting players. This should match some of the behavior of the players page (searching, filtering, etc.)
 - [ ] Check input on editable point fields to be only integers - Brent
 - [ ] Fix hitting back from a group to disallow creating a group with no players - Brent
 - [x] Require more than 1 player to go to group page - Mallory
 - [ ] Automatically add player to list based off their Facebook login? - Brent
+- [ ] Add the ability to log out - Brent
