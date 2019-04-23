@@ -12,8 +12,8 @@ import { Group } from '../../models/Group';
  * to be selected to form a group.
  */
 @Component({
-    selector: 'page-players',
-    templateUrl: 'players.html'
+	selector: 'page-players',
+	templateUrl: 'players.html'
 })
 export class PlayersPage {
 
@@ -28,50 +28,51 @@ export class PlayersPage {
 
 	// These fields are bound to user input fields. If these are changed the bindings
 	// should be updated in the html view template.
-    private playerFilterInput: string;
-    private playerFirstName: string;
-    private playerLastName: string;
+	private playerFilterInput: string;
+	private playerFirstName: string;
+	private playerLastName: string;
 
-    constructor(public navController: NavController, private appStorage: AppStorage, public toastController: ToastController) {
+	constructor(public navController: NavController, private appStorage: AppStorage, public toastController: ToastController) {
 		this.players = [];
-        this.filteredPlayers = [];
+		this.filteredPlayers = [];
+		this.selectedPlayers = [];
 		this.loadPlayers();
-    }
+	}
 
 	/**
 	 * This fires when input changes in the search filter. This performs the actual
 	 * filtering and updates the bound data models with the filtered results.
 	 */
-    public onInputFilterResults(): void {
+	public onInputFilterResults(): void {
 		// Only filter the results if the input is not null or empty.
-        if (this.playerFilterInput && this.playerFilterInput.length > 0) {
-            this.filteredPlayers = this.players.filter((player: Player) => {
+		if (this.playerFilterInput && this.playerFilterInput.length > 0) {
+			this.filteredPlayers = this.players.filter((player: Player) => {
 				// This regular expression matches anything(.*) then the filter input,
 				// followed by anything(.*) and ignores case.
-                let regex = new RegExp( `.*${this.playerFilterInput}.*`, "i");
-                let matchesFirstName: RegExpMatchArray = player.firstName.match(regex);
+				let regex = new RegExp( `.*${this.playerFilterInput}.*`, "i");
+				let matchesFirstName: RegExpMatchArray = player.firstName.match(regex);
 				let matchesLastName: RegExpMatchArray = player.lastName.match(regex);
 
 				// If either the first or last name matches any of the filter input
 				// then we want to include this player in the filtered results.
-                if ((matchesFirstName && matchesFirstName.length > 0) || (matchesLastName && matchesLastName.length > 0)) {
-                    return true;
-                }
-            });
-        }
-        else {
+				if ((matchesFirstName && matchesFirstName.length > 0) || (matchesLastName && matchesLastName.length > 0)) {
+					return true;
+				}
+			});
+		}
+		else {
 			// If the filter is empty don't filter at all.
-            this.filteredPlayers = this.players;
-        }
-    }
+			this.filteredPlayers = this.players;
+		}
+	}
 
 	/**
 	 * This fires when the filter UI is cleared or cancelled.
 	 */
-    public onClearOrCancelFilter(): void {
-        this.filteredPlayers = this.players;
-        this.playerFilterInput = "";
-    }
+	public onClearOrCancelFilter(): void {
+		this.filteredPlayers = this.players;
+		this.playerFilterInput = "";
+	}
 
 	/**
 	 * Checks if string is only whitespace (tabs, spaces, etc.)
@@ -99,7 +100,7 @@ export class PlayersPage {
 			  toast.present();
 		}
 		else {
-			// If the first and last name are not just whitespace, enter new player to database.
+				// If the first and last name are not just whitespace, enter new player to database.
 			let player: Player =  {
 				firstName: this.playerFirstName,
 				lastName: this.playerLastName,
@@ -114,7 +115,7 @@ export class PlayersPage {
 				}
 			});
 		}
-    }
+	}
 
 	/**
 	 * This fires when the UI for navigating to a group is activated.
@@ -122,76 +123,76 @@ export class PlayersPage {
 	 * and either creating the new group or loading the existing group and
 	 * handing it off to the group page.
 	 */
-    public gotoGroupPage(): void {
-        // First off load all the groups.
-        this.getGroups().then((groups: Group[]) => {
+	public gotoGroupPage(): void {
+		// First off load all the groups.
+		this.getGroups().then((groups: Group[]) => {
 			let groupMatch: Group;
 
 			// Filter down to only the selected players.
-            let selectedPlayers: Player[] = this.players.filter((player: Player) => {
-                return player.isSelected;
-            });
+			let selectedPlayers: Player[] = this.players.filter((player: Player) => {
+				return player.isSelected;
+			});
 
-            try{
+			try{
 				// Go through each group and see if the group has the same # of players
 				// as selected and that all those players are the players in the group.
 				// If all of that is true then the group is a match.
-                groups.forEach((group: Group) => {
-                    try {
-                        if(group.playerIds.length === selectedPlayers.length) {
-                            group.playerIds.forEach((memberId) => {
-                                try {
-                                    selectedPlayers.forEach((player) => {
-                                        if(player.storageId === memberId) {
+				groups.forEach((group: Group) => {
+					try {
+						if(group.playerIds.length === selectedPlayers.length) {
+							group.playerIds.forEach((memberId) => {
+								try {
+									selectedPlayers.forEach((player) => {
+										if(player.storageId === memberId) {
 											// Short circuit the foreach loop since we
 											// found the player.
-                                            throw { playerFound: true };
-                                        }
+											throw { playerFound: true };
+										}
 
-                                    });
+									});
 
 									// We've gone through all the players and no match.
 									// Short circuit the group loop since this can't
 									// be the right group.
 									throw { playerFound: false };
-                                }
-                                catch(playerFoundBreakException) {
-                                    if(!playerFoundBreakException.playerFound) {
+								}
+								catch(playerFoundBreakException) {
+									if(!playerFoundBreakException.playerFound) {
 										// Player not found in this group, re-throw to
 										// continue the short circuit of the group's
 										// player loop.
-                                        throw playerFoundBreakException;
-                                    }
+										throw playerFoundBreakException;
+									}
 
 									// The player was found. Continue checking the rest
 									// of the players in this group.
-                                }
-                            });
+								}
+							});
 
-                            // All players are in this group.
-                            groupMatch = group;
-                            throw { playerFound: true, groupMatch: true };
-                        }
-                    }
-                    catch(playerNotFoundBreakException) {
-                        if(!playerNotFoundBreakException.playerFound) {
-                            // We weren't able to find a player in this group.
+							// All players are in this group.
+							groupMatch = group;
+							throw { playerFound: true, groupMatch: true };
+						}
+					}
+					catch(playerNotFoundBreakException) {
+						if(!playerNotFoundBreakException.playerFound) {
+							// We weren't able to find a player in this group.
 
-                        }
-                        else {
-                            // We should have the group with all players at this point.
-                            // throw an exception to short circuit the loops.
-                            throw playerNotFoundBreakException;
-                        }
-                    }
-                });
-            }
-            catch(groupMatchBreakException) {}
+						}
+						else {
+							// We should have the group with all players at this point.
+							// throw an exception to short circuit the loops.
+							throw playerNotFoundBreakException;
+						}
+					}
+				});
+			}
+			catch(groupMatchBreakException) {}
 
-            if(!groupMatch) {
+			if(!groupMatch) {
 				// We didn't find a matching group of players. Create a new one instead.
-                let group: Group = {
-                    playerIds: selectedPlayers.map((player) => { return player.storageId; }),
+				let group: Group = {
+					playerIds: selectedPlayers.map((player) => { return player.storageId; }),
 					playerPoints: {}
 				};
 
@@ -211,14 +212,14 @@ export class PlayersPage {
 				this.navController.push(GroupPage, { 'group': groupMatch });
 			}
 
-        }).catch((reason: any) => {
-            console.error(`There was an error loading the groups. Error ${reason}`);
-        });
+		}).catch((reason: any) => {
+			console.error(`There was an error loading the groups. Error ${reason}`);
+		});
 
-    }
+	}
 
 
-    /**
+	/**
 	 * Persists a new group to storage.
 	 *
 	 * @param {Group} group The group to persist
@@ -226,7 +227,7 @@ export class PlayersPage {
 	 * @memberof PlayersPage
 	 */
 	public addGroup(group: Group): Promise<Group> {
-        return this.appStorage.addGroup(group);
+		return this.appStorage.addGroup(group);
 	}
 
 
@@ -236,12 +237,11 @@ export class PlayersPage {
 	 * @memberof PlayersPage
 	 */
 	public updatePlayersSelected(): void {
-		let playersSelected: Player[] = this.players.filter((player: Player) => {
+		this.selectedPlayers = this.players.filter((player: Player) => {
 			return player.isSelected;
-		});
+		}).map( (player: Player) => `${player.firstName} ${player.lastName}` );
 
-		// Group size is at least 2 people.
-		this.isGroupSize = playersSelected.length > 1;
+		this.isGroupSize = this.selectedPlayers.length > 0;
 	}
 
 	/**
@@ -266,10 +266,10 @@ export class PlayersPage {
 	 * @memberof PlayersPage
 	 */
 	private getGroups(): Promise<Group[]> {
-        return this.appStorage.getGroups();
-    }
+		return this.appStorage.getGroups();
+	}
 
-    /**
+	/**
 	 * Loads the players from storage.
 	 *
 	 * @private
@@ -278,11 +278,11 @@ export class PlayersPage {
 	 * @memberof PlayersPage
 	 */
 	private loadPlayers(refresh: boolean = false): void {
-        this.appStorage.getPlayers(refresh).then((loadedPlayers: Player[]): void => {
+		this.appStorage.getPlayers(refresh).then((loadedPlayers: Player[]): void => {
 			this.players = loadedPlayers;
 			this.sortPlayers();
 			this.onClearOrCancelFilter();
-        } ).catch((reason:any) => {
+		} ).catch((reason:any) => {
 			console.error("There was an error loading the players." + reason);
 		});
 	}
