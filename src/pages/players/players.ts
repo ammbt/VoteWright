@@ -22,6 +22,7 @@ export class PlayersPage {
 	// These fields are bound to the view. If these are changed the bindings should
 	// be updated in the html view template.
 	public filteredPlayers: Player[];
+	public selectedPlayers: string[];
 	public isGroupSize: boolean;
 	public sortByMostRecentlyPlayed: boolean;
 
