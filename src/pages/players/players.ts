@@ -22,7 +22,7 @@ export class PlayersPage {
 	// These fields are bound to the view. If these are changed the bindings should
 	// be updated in the html view template.
 	public filteredPlayers: Player[];
-	public arePlayersSelected: boolean;
+	public isGroupSize: boolean;
 	public sortByMostRecentlyPlayed: boolean;
 
 	// These fields are bound to user input fields. If these are changed the bindings
@@ -239,7 +239,8 @@ export class PlayersPage {
 			return player.isSelected;
 		});
 
-		this.arePlayersSelected = playersSelected.length > 0;
+		// Group size is at least 2 people.
+		this.isGroupSize = playersSelected.length > 1;
 	}
 
 	/**
