@@ -62,3 +62,4 @@ or
 - [ ] Require more than 1 player to go to group page - Brent
 - [ ] Automatically add player to list based off their Facebook login? - Brent
 - [ ] Add the ability to log out - Brent
+- [ ] Make the selected player list in the header wrap so that it doesn't go off the page - Brent
