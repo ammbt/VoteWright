@@ -241,7 +241,8 @@ export class PlayersPage {
 			return player.isSelected;
 		}).map( (player: Player) => `${player.firstName} ${player.lastName}` );
 
-		this.isGroupSize = this.selectedPlayers.length > 0;
+		// Enforces a group size of at least 2 players.
+		this.isGroupSize = this.selectedPlayers.length > 1;
 	}
 
 	/**
