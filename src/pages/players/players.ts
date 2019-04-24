@@ -23,7 +23,7 @@ export class PlayersPage {
 	// be updated in the html view template.
 	public filteredPlayers: Player[];
 	public selectedPlayers: string[];
-	public arePlayersSelected: boolean;
+	public isGroupSize: boolean;
 	public sortByMostRecentlyPlayed: boolean;
 
 	// These fields are bound to user input fields. If these are changed the bindings
@@ -241,7 +241,8 @@ export class PlayersPage {
 			return player.isSelected;
 		}).map( (player: Player) => `${player.firstName} ${player.lastName}` );
 
-		this.arePlayersSelected = this.selectedPlayers.length > 0;
+		// Enforces a group size of at least 2 players.
+		this.isGroupSize = this.selectedPlayers.length > 1;
 	}
 
 	/**
