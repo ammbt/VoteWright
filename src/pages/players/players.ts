@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
+import { AlertController, NavController, ToastController } from 'ionic-angular';
 import  moment  from 'moment';
 import { AppStorage } from '../../services/app-storage';
 import { Player } from '../../models/Player';
@@ -32,7 +31,9 @@ export class PlayersPage {
 	private playerFirstName: string;
 	private playerLastName: string;
 
-	constructor(public navController: NavController, private appStorage: AppStorage, public toastController: ToastController) {
+	constructor(public navController: NavController, private appStorage: AppStorage, public toastController: ToastController,
+			public alertController: AlertController) {
+
 		this.players = [];
 		this.filteredPlayers = [];
 		this.selectedPlayers = [];
@@ -267,6 +268,38 @@ export class PlayersPage {
 	 */
 	private getGroups(): Promise<Group[]> {
 		return this.appStorage.getGroups();
+	}
+
+	/**
+	 * Deletes a player from the view and database, after confirmation from user.
+	 *
+	 * @param {Player} player Player to delete.
+	 * @memberof PlayersPage
+	 */
+	private deletePlayer(player: Player): void {
+
+		const confirm = this.alertController.create({
+			title: 'Are you SURE?',
+			message: 'This action cannot be undone. Are you sure you want to delete ' + player.firstName + ' ' +
+					player.lastName + ' from all existence?',
+
+		  buttons: [
+			  {
+				text: 'I guess not...'
+			  },
+			  {
+				text: 'Absolutely!',
+				handler: () => {
+					// Remove deleted player from display of filtered players.
+					this.filteredPlayers.splice(this.filteredPlayers.indexOf(player), 1);
+
+					this.appStorage.deletePlayer(player);
+				}
+			  }
+			]
+		  });
+
+		  confirm.present();
 	}
 
 	/**

@@ -72,7 +72,7 @@ export class AppStorage {
         if(!matchingPlayer) {
             return this.addObject<Player>( this.playersCollection, player);
         }
-    }
+	}
 
     /**
 	 * Retrieve the groups from the cache or storage.
@@ -190,6 +190,33 @@ export class AppStorage {
 		this.database.collection(collection).doc(object.storageId).set(storageObject).catch((reason: any) => {
 			console.error(`Unable to update the item in storage with id ${object.storageId}. Error: ${reason}`);
 		});
+	}
+
+	/**
+	 * Delete the data for a player.
+	 *
+	 * @param {Player} player The player to delete.
+	 * @memberof AppStorage
+	 */
+	public deletePlayer(player: Player): void {
+		this.deleteObject<Player>(player, this.playersCollection);
+	}
+
+	/**
+	 * Delete an IStorageObject in storage.
+	 *
+	 * @private
+	 * @template T
+	 * @param {T} object The original object to delete
+	 * @param {string} collection The storage collection this object belongs to.
+	 * @memberof AppStorage
+	 */
+	private deleteObject<T extends IStorageObject>(object: T, collection: string) {
+		this.database.collection(collection).doc(object.storageId).delete().then(function() {
+			console.log(`Item successfully deleted.`);
+		}).catch(function(reason) {
+			console.error(`Unable to DELETE the item in storage with id ${object.storageId}. Error: ${reason}`);
+		})
 	}
 
 	/**

@@ -105,6 +105,11 @@ $colors: (
 		}
 	}
 
+	// Use default font for Alerts
+	h2.alert-title {
+		font-family: 'roboto';
+	}
+
 // Margins
 // --------------------------------------------------
 // Create a margin around the entire main area
