@@ -51,14 +51,15 @@ or
 ### UI/UX
 - [ ] General improvements to the flow and behavior of the app.
 - [ ] Add form fields for direct point input. - Tom
-- [x] Toggle editable point fields. - Mallory
 - [ ] Improve the update points button (better text and placement). - Molly
-- [x] Disable the add player button when the input fields are not set. - Mallory
-- [x] Add a sort by last played to the players list
-- [x] Add a filter by last played to the players list
 - [ ] Add a new page for displaying and selecting groups as an alternative to selecting players. This should match some of the behavior of the players page (searching, filtering, etc.)
 - [ ] Check input on editable point fields to be only integers - Brent
 - [ ] Fix hitting back from a group to disallow creating a group with no players - Brent
-- [ ] Require more than 1 player to go to group page - Brent
 - [ ] Automatically add player to list based off their Facebook login? - Brent
 - [ ] Add the ability to log out - Brent
+- [x] Add a filter by last played to the players list. - Austin
+- [x] Add a sort by last played to the players list. - Austin
+- [x] Add functionality to delete a player (and groups of deleted player). -Mallory
+- [x] Disable the add player button when the input fields are not set. - Mallory
+- [x] Require more than 1 player to go to group page - Mallory
+- [x] Toggle editable point fields. - Mallory
