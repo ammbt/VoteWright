@@ -199,7 +199,37 @@ export class AppStorage {
 	 * @memberof AppStorage
 	 */
 	public deletePlayer(player: Player): void {
-		this.deleteObject<Player>(player, this.playersCollection);
+
+		// Finds groups that deleted player is in and deletes the group
+		this.getGroups().then((groups: Group[]) => {
+
+			// Go through each group and see if the deleted player is in the group.
+			// If deleted player is in group, then delete group.
+			groups.forEach((group: Group) => {
+				group.playerIds.forEach((memberId) => {
+					if(player.storageId === memberId) {
+
+						// Delete this group because the player is being deleted
+						this.deleteGroup(group);
+					}
+				});
+			});
+
+			this.deleteObject<Player>(player, this.playersCollection);
+
+		}).catch((reason: any) => {
+			console.error(`There was an error loading the groups. Error ${reason}. Did not delete player.`);
+		});
+	}
+
+	/**
+	 * Delete the group when a player is deleted.
+	 *
+	 * @param {Group} group The group to delete.
+	 * @memberof AppStorage
+	 */
+	private deleteGroup(group: Group): void {
+		this.deleteObject<Group>(group, this.groupsCollection);
 	}
 
 	/**
