@@ -72,7 +72,7 @@ export class AppStorage {
         if(!matchingPlayer) {
             return this.addObject<Player>( this.playersCollection, player);
         }
-    }
+	}
 
     /**
 	 * Retrieve the groups from the cache or storage.
@@ -190,6 +190,63 @@ export class AppStorage {
 		this.database.collection(collection).doc(object.storageId).set(storageObject).catch((reason: any) => {
 			console.error(`Unable to update the item in storage with id ${object.storageId}. Error: ${reason}`);
 		});
+	}
+
+	/**
+	 * Delete the data for a player.
+	 *
+	 * @param {Player} player The player to delete.
+	 * @memberof AppStorage
+	 */
+	public deletePlayer(player: Player): void {
+
+		// Finds groups that deleted player is in and deletes the group
+		this.getGroups().then((groups: Group[]) => {
+
+			// Go through each group and see if the deleted player is in the group.
+			// If deleted player is in group, then delete group.
+			groups.forEach((group: Group) => {
+				group.playerIds.forEach((memberId) => {
+					if(player.storageId === memberId) {
+
+						// Delete this group because the player is being deleted
+						this.deleteGroup(group);
+					}
+				});
+			});
+
+			this.deleteObject<Player>(player, this.playersCollection);
+
+		}).catch((reason: any) => {
+			console.error(`There was an error loading the groups. Error ${reason}. Did not delete player.`);
+		});
+	}
+
+	/**
+	 * Delete the group when a player is deleted.
+	 *
+	 * @param {Group} group The group to delete.
+	 * @memberof AppStorage
+	 */
+	private deleteGroup(group: Group): void {
+		this.deleteObject<Group>(group, this.groupsCollection);
+	}
+
+	/**
+	 * Delete an IStorageObject in storage.
+	 *
+	 * @private
+	 * @template T
+	 * @param {T} object The original object to delete
+	 * @param {string} collection The storage collection this object belongs to.
+	 * @memberof AppStorage
+	 */
+	private deleteObject<T extends IStorageObject>(object: T, collection: string) {
+		this.database.collection(collection).doc(object.storageId).delete().then(function() {
+			console.log(`Item successfully deleted.`);
+		}).catch(function(reason) {
+			console.error(`Unable to DELETE the item in storage with id ${object.storageId}. Error: ${reason}`);
+		})
 	}
 
 	/**
