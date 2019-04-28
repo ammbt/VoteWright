@@ -40,6 +40,19 @@ export class PlayersPage {
 	}
 
 	/**
+	 * Players Page Reloaded (ie back button)
+	 */
+	ionViewWillEnter() {
+		// Clears list of Selected Players
+		this.selectedPlayers  = [];
+
+		// Un-checks Players
+		this.players.forEach( (player) => {
+			player.isSelected = false;
+		});
+    }
+
+	/**
 	 * This fires when input changes in the search filter. This performs the actual
 	 * filtering and updates the bound data models with the filtered results.
 	 */
