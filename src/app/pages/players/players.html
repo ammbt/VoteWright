@@ -1,10 +1,12 @@
 <ion-header>
-    <ion-navbar>
-        <button ion-button menuToggle>
+    <ion-toolbar>
+        <ion-menu-toggle>
+<ion-button>
             <ion-icon name="menu"></ion-icon>
-        </button>
+        </ion-button>
+</ion-menu-toggle>
     <ion-title>Vote Wright - Players</ion-title>
-	</ion-navbar>
+	</ion-toolbar>
 
 	<ion-item>
 		<h2>
@@ -19,7 +21,7 @@
     <h3>Pick the Players</h3>
     <ion-searchbar
         class="filter"
-        [(ngModel)]="playerFilterInput"
+        [(value)]="playerFilterInput"
         (ionInput)="onInputFilterResults($event)"
         (ionCancel)="onClearOrCancelFilter($event)"
         (ionClear)="onClearOrCancelFilter($event)"
@@ -29,45 +31,47 @@
 	</ion-searchbar>
 	<ion-item>
 		<ion-label>Sort by most recently played</ion-label>
-		<ion-toggle [(ngModel)]="sortByMostRecentlyPlayed" (ngModelChange)="sortPlayers()"></ion-toggle>
+		<ion-toggle [(checked)]="sortByMostRecentlyPlayed" (ionChange)="sortPlayers()"></ion-toggle>
 	</ion-item>
     <ion-list>
-        <ion-card ion-item *ngFor="let player of filteredPlayers">
+        <ion-item *ngFor="let player of filteredPlayers">
             <ion-card-content>
                 <ion-item>
-                    <div item-left>{{ player.firstName }} {{ player.lastName }}</div>
+					<ion-label>
+						<div item-left>{{ player.firstName }} {{ player.lastName }}</div>
+					</ion-label>
                     <ion-checkbox item-right
-                        [(ngModel)]="player.isSelected"
-						(ngModelChange)="updatePlayersSelected($event)">
+                        [(checked)]="player.isSelected"
+						(ionChange)="updatePlayersSelected($event)">
                     </ion-checkbox>
                 </ion-item>
             </ion-card-content>
-        </ion-card>
+        </ion-item>
     </ion-list>
 
 	<ion-input
-		[(ngModel)] = "playerFirstName"
+		[(value)] = "playerFirstName"
 		type="text"
 		placeholder="First name">
 	</ion-input>
 	<ion-input
-		[(ngModel)] = "playerLastName"
+		[(value)] = "playerLastName"
 		type="text"
 		placeholder="Last name">
 	</ion-input>
 
-	<button
-		ion-button primary
+	<ion-button
+	 primary
 		[disabled]="!(playerFirstName && playerLastName)"
 		(tap)="addPlayer()">Add Player
-	</button>
+	</ion-button>
 
-    <ion-fab right bottom>
-		<button ion-fab
+    <ion-fab slot="fixed" right vertical="bottom">
+		<ion-fab-button
 				[disabled] = "!isGroupSize"
                 color="primary"
                 (tap)="gotoGroupPage()">
             <ion-icon name="arrow-round-forward"></ion-icon>
-        </button>
+        </ion-fab-button>
     </ion-fab>
 </ion-content>

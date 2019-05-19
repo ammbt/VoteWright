@@ -1,65 +1,76 @@
 <ion-header>
-	<ion-navbar>
-		<button ion-button menuToggle>
-			<ion-icon name="menu"></ion-icon>
-		</button>
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-back-button></ion-back-button>
+		</ion-buttons>
+		<ion-menu-toggle>
+			<ion-button>
+				<ion-icon name="menu"></ion-icon>
+			</ion-button>
+		</ion-menu-toggle>
 		<ion-title>Vote Wright - Group</ion-title>
-	</ion-navbar>
+	</ion-toolbar>
 </ion-header>
 
 <ion-content>
 	<ion-list>
-		<ion-card ion-item *ngFor="let player of group.loadedPlayers">
+		<ion-item *ngFor="let player of group.loadedPlayers">
+			<ion-label>
+			</ion-label>
 			<ion-card-content>
                 <ion-grid>
 					<ion-row>
-						<ion-col col-12 col-sm-5>
+						<ion-col size="12" size-sm="5">
 							<ion-item>
-								{{player.firstName}} {{player.lastName}}
+								<ion-label>
+									{{player.firstName}} {{player.lastName}}
+								</ion-label>
 							</ion-item>
 						</ion-col>
-						<ion-col col-4 col-sm-2>
+						<ion-col size="4" size-sm="2">
 							<ion-item class="alignright">
-								+
+								<ion-label>
+									+
+								</ion-label>
 							</ion-item>
 						</ion-col>
-						<ion-col col-4 col-sm-2>
+						<ion-col size="4" size-sm="2">
 							<ion-item>
 								<ion-input
 									[readonly]="!isEditMode"
-									[(ngModel)]="player.points"
+									[(value)]="player.points"
 									type="number"
 									(ionChange)="updatePointsChanged()">
 								</ion-input>
 							</ion-item>
 						</ion-col>
-						<ion-col col-4 col-sm-3>
+						<ion-col size="4" size-sm="3">
 							<ion-item>
 								<ion-checkbox item-right
-										[(ngModel)]="player.isSelected"
-										(ngModelChange)="updatePlayersSelected($event)">
+										[(checked)]="player.isSelected"
+										(ionChange)="updatePlayersSelected($event)">
 								</ion-checkbox>
 							</ion-item>
 						</ion-col>
 					</ion-row>
 				</ion-grid>
 			</ion-card-content>
-		</ion-card>
+		</ion-item>
 	</ion-list>
 
-	<button ion-button
+	<ion-button
 			primary
 			[disabled]="!arePlayersSelected"
 			(tap)="updatePoints()">
 		Update Points
-	</button>
+	</ion-button>
 
-	<ion-fab right bottom>
-		<button ion-fab
+	<ion-fab slot="fixed" right vertical="bottom">
+		<ion-fab-button
 				[disabled]="arePlayersSelected"
                 color="primary"
                 (tap)="toggleEditMode()">
             <ion-icon name="create"></ion-icon>
-        </button>
+        </ion-fab-button>
 	</ion-fab>
 </ion-content>
