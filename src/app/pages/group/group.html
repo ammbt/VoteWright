@@ -1,0 +1,65 @@
+<ion-header>
+	<ion-navbar>
+		<button ion-button menuToggle>
+			<ion-icon name="menu"></ion-icon>
+		</button>
+		<ion-title>Vote Wright - Group</ion-title>
+	</ion-navbar>
+</ion-header>
+
+<ion-content>
+	<ion-list>
+		<ion-card ion-item *ngFor="let player of group.loadedPlayers">
+			<ion-card-content>
+                <ion-grid>
+					<ion-row>
+						<ion-col col-12 col-sm-5>
+							<ion-item>
+								{{player.firstName}} {{player.lastName}}
+							</ion-item>
+						</ion-col>
+						<ion-col col-4 col-sm-2>
+							<ion-item class="alignright">
+								+
+							</ion-item>
+						</ion-col>
+						<ion-col col-4 col-sm-2>
+							<ion-item>
+								<ion-input
+									[readonly]="!isEditMode"
+									[(ngModel)]="player.points"
+									type="number"
+									(ionChange)="updatePointsChanged()">
+								</ion-input>
+							</ion-item>
+						</ion-col>
+						<ion-col col-4 col-sm-3>
+							<ion-item>
+								<ion-checkbox item-right
+										[(ngModel)]="player.isSelected"
+										(ngModelChange)="updatePlayersSelected($event)">
+								</ion-checkbox>
+							</ion-item>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-card-content>
+		</ion-card>
+	</ion-list>
+
+	<button ion-button
+			primary
+			[disabled]="!arePlayersSelected"
+			(tap)="updatePoints()">
+		Update Points
+	</button>
+
+	<ion-fab right bottom>
+		<button ion-fab
+				[disabled]="arePlayersSelected"
+                color="primary"
+                (tap)="toggleEditMode()">
+            <ion-icon name="create"></ion-icon>
+        </button>
+	</ion-fab>
+</ion-content>
