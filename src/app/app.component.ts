@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { PlayersPage } from '../pages/players/players';
 import { LoginPage } from '../pages/login/login';
+import { PrivacyPolicyPage } from '../pages/privacyPolicy/privacyPolicy';
 import firebase from 'firebase';
 import appConfig from '../../app-config.json';
 
@@ -20,7 +21,8 @@ export class VoteWright {
 
 	constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
 		this.pages = [
-			{ title: 'Players', component: PlayersPage }
+			{ title: 'Players', component: PlayersPage },
+            { title: 'Privacy Policy', component: PrivacyPolicyPage }
 		];
 
         // Initialize Firebase

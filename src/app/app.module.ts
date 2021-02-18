@@ -10,6 +10,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { LoginPage } from '../pages/login/login';
 import { PlayersPage } from '../pages/players/players';
 import { GroupPage } from '../pages/group/group';
+import { PrivacyPolicyPage } from '../pages/privacyPolicy/privacyPolicy';
 
 // Ionic components
 import { StatusBar } from '@ionic-native/status-bar';
@@ -24,7 +25,8 @@ import { Authentication } from '../services/authentication';
     VoteWright,
 	LoginPage,
     PlayersPage,
-    GroupPage
+    GroupPage,
+    PrivacyPolicyPage
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,8 @@ import { Authentication } from '../services/authentication';
     VoteWright,
 	LoginPage,
     PlayersPage,
-    GroupPage
+    GroupPage,
+    PrivacyPolicyPage
   ],
   providers: [
 	Authentication,
